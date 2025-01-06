@@ -36,7 +36,7 @@ export const LoginForm = ({
 
       if (signInAttempt.status === 'complete') {
         await setActive({ session: signInAttempt.createdSessionId })
-        router.push('/dashboard')
+        router.push('/home')
       } else {
         console.error(JSON.stringify(signInAttempt, null, 2))
       }

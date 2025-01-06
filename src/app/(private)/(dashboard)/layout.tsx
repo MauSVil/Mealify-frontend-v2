@@ -1,3 +1,5 @@
+'use client';
+
 import { AppSidebar } from "@/components/app-sidebar"
 import {
   Breadcrumb,
@@ -13,11 +15,48 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { ReactNode, useMemo } from "react"
+import { Button } from "@/components/ui/button";
+import { usePathname, useRouter } from "next/navigation";
+import { useBusiness } from "@/contexts/BusinessContext";
+import { Loader2 } from "lucide-react";
 
-export const DashboardPage = () => {
+export const DashboardLayout = ({ children }: { children: ReactNode }) => {
+  const path = usePathname();
+  const router = useRouter();
+  const { businesses, isLoading } = useBusiness();
+
+  const content = useMemo(() => {
+    if (path === "/business") {
+      return children
+    }
+
+    if (isLoading) {
+      return (
+        <div className="flex-1 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin mr-2" />
+          Loading...
+        </div>
+      )
+    }
+
+    if (businesses.length === 0) {
+      return (
+        <div className="flex-1 flex flex-col items-center justify-center gap-4">
+          <div>No se encontraron negocios</div>
+          <Button onClick={() => router.push("/business")}>
+            Crear un negocio
+          </Button>
+        </div>
+      )
+    }
+
+    return children
+  }, [businesses, children, path, router, isLoading])
+
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar businesses={businesses} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
@@ -39,17 +78,12 @@ export const DashboardPage = () => {
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-          </div>
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+          {content}
         </div>
       </SidebarInset>
     </SidebarProvider>
   )
 }
 
-export default DashboardPage;
+export default DashboardLayout;
 
