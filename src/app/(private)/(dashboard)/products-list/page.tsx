@@ -16,6 +16,7 @@ import { Product } from '@/types/Product.type';
 import { useMemo, useState } from 'react';
 import DataTableColumnHeader from '@/components/DataTableHeader';
 import { Switch } from '@/components/ui/switch';
+import Image from 'next/image';
 
 
 const ProductsList = () => {
@@ -29,6 +30,21 @@ const ProductsList = () => {
   const columns: ColumnDef<Product>[] = useMemo(
     () =>
       [
+        {
+          id: 'image',
+          accessorFn: (row) => row.image_min,
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Imagen" />
+          ),
+          cell: ({ getValue }) => {
+            const value = getValue() as string;
+            return (
+              <>
+                {value ? <Image src={value} width={40} height={40} alt='product-image' /> : '(Sin imagen)'}
+              </>
+            );
+          },
+        },
         {
           id: 'name',
           accessorFn: (row) => `${row.name}`,
