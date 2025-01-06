@@ -16,6 +16,8 @@ import { useBusiness } from "./_hooks/useBusiness";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+const isClient = typeof window !== 'undefined';
+
 const categories = [
   { value: 'mexicana', label: 'Mexicana' },
   { value: 'italiana', label: 'Italiana' },
@@ -34,9 +36,11 @@ const formSchema = z.object({
   phone: z.string({ message: 'El telefono es obligatorio' }).min(10, 'El telefono es obligatorio').max(10, 'El telefono es muy largo'),
   category: z.enum(['mexicana', 'italiana', 'china', 'japonesa', 'fast-food']),
   delivery_fee: z.number().min(0, 'El costo de envio es obligatorio'),
-  image: z.instanceof(File).refine((file) => file.size < 5000000, {
-    message: 'La imagen es muy grande',
-  }).optional(),
+  image: isClient
+    ? z.instanceof(File).refine((file) => file.size < 5000000, {
+        message: 'La imagen es muy grande',
+      }).optional()
+    : z.any().optional(),
   address: z.object({
     lat: z.number(),
     lng: z.number(),
