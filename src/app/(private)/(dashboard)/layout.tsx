@@ -15,7 +15,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { ReactNode, useMemo } from "react"
+import { ReactNode, useEffect, useMemo, useState } from "react"
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { useBusiness } from "@/contexts/BusinessContext";
@@ -26,6 +26,13 @@ import { toast } from "sonner";
 export const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const path = usePathname();
   const router = useRouter();
+
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  useEffect(() => {
+    // Configurar audio solo en el cliente
+    setAudio(new Audio('/sounds/notification.mp3'));
+  }, []);
+
   const { businesses, isLoading } = useBusiness();
 
   const content = useMemo(() => {
@@ -56,14 +63,15 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
     return children
   }, [businesses, children, path, router, isLoading])
 
-  const audio = useMemo(() => new Audio('/sounds/notification.mp3'), []);
 
   useSocket('new-order', (data) => {
     console.log(data);
     toast.info('Nueva orden');
-    audio.play().catch((err) => {
-      console.error('Error reproduciendo el audio:', err);
-    });
+    if (audio) {
+      audio.play().catch((err) => {
+        console.error('Error reproduciendo el audio:', err);
+      });
+    }
   })
 
   return (
