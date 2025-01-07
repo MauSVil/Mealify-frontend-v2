@@ -7,6 +7,7 @@ import {
   PieChart,
   Beef,
   LayoutDashboard,
+  ShoppingBasket
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -48,6 +49,17 @@ const data = {
         {
           title: "Add",
           url: "/products-add",
+        },
+      ],
+    },
+    {
+      title: "Orders",
+      url: "#",
+      icon: ShoppingBasket,
+      items: [
+        {
+          title: "List",
+          url: "orders/list",
         },
       ],
     },

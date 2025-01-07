@@ -18,7 +18,6 @@ import DataTableColumnHeader from '@/components/DataTableHeader';
 import { Switch } from '@/components/ui/switch';
 import Image from 'next/image';
 
-
 const ProductsList = () => {
   const [sorting, setSorting] = useState<SortingState>([{ id: 'name', desc: false }]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])

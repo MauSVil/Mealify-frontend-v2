@@ -12,8 +12,21 @@ export const orderSchema = z.object({
   payment_intent_id: z.string().min(1, 'El ID del intento de pago es obligatorio'),
   latitude: z.number(),
   longitude: z.number(),
-  createdAt: z.date().optional(),
+  created_at: z.date().optional(),
   updatedAt: z.date().optional(),
+  order_items: z.array(z.object({
+    id: z.number(),
+    order_id: z.number(),
+    product_id: z.number(),
+    quantity: z.number(),
+    unit_price: z.string(),
+    products: z.array(z.object({
+      name: z.string(),
+      price: z.string(),
+      image_min: z.string(),
+      description: z.string(),
+    }))
+  })).optional(),
 });
 
 export type Order = z.infer<typeof orderSchema>;
