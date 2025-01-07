@@ -56,9 +56,14 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
     return children
   }, [businesses, children, path, router, isLoading])
 
+  const audio = useMemo(() => new Audio('/sounds/notification.mp3'), []);
+
   useSocket('new-order', (data) => {
     console.log(data);
     toast.info('Nueva orden');
+    audio.play().catch((err) => {
+      console.error('Error reproduciendo el audio:', err);
+    });
   })
 
   return (
