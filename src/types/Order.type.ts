@@ -20,12 +20,12 @@ export const orderSchema = z.object({
     product_id: z.number(),
     quantity: z.number(),
     unit_price: z.string(),
-    products: z.array(z.object({
+    products: z.object({
       name: z.string(),
       price: z.string(),
       image_min: z.string(),
       description: z.string(),
-    }))
+    })
   })).optional(),
 });
 

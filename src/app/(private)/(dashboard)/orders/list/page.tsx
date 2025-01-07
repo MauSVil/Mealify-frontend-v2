@@ -1,84 +1,71 @@
 'use client';
 
-import moment from "moment";
-import { ColumnDef, ColumnFiltersState, getCoreRowModel, getFilteredRowModel, getSortedRowModel, SortingState, useReactTable, VisibilityState } from "@tanstack/react-table";
+import moment from "moment"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useOrders } from "./_hooks/useOrders"
-import { useMemo, useState } from "react";
-import { DataTable2 } from "@/components/DataTable";
-import { Order } from "@/types/Order.type";
-import DataTableColumnHeader from "@/components/DataTableHeader";
-import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const OrdersListPage = () => {
-  const [sorting, setSorting] = useState<SortingState>([{ id: 'created-at', desc: true }]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [globalFilter, setGlobalFilter] = useState('');
-  const { ordersQuery } = useOrders();
-
-  const router = useRouter();
-
-  const columns: ColumnDef<Order>[] = useMemo(
-    () =>
-      [
-        {
-          id: 'order-items',
-          accessorFn: (row) => `${row.order_items?.length} item(s)`,
-          header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Items" />
-          ),
-        },
-        {
-          id: 'created-at',
-          accessorFn: (row) => moment(row.created_at).format('DD/MM/YYYY: HH:mm'),
-          header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Fecha" />
-          ),
-        },
-        {
-          id: 'actions',
-          header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Acciones" />
-          ),
-          cell: ({ row }) => {
-            return (
-              <Button size="icon" onClick={() => router.push(`/orders/${row.original.id}`)}>
-                <Eye size={14} />
-              </Button>
-            )
-          }
-        }
-      ] satisfies ColumnDef<Order>[],
-    []
-  );
-
-  const table = useReactTable({
-      data: (ordersQuery.data || []).filter(order => order.status === 'preparing'),
-      columns,
-      getRowId(originalRow) {
-        return originalRow.id!.toString();
-      },
-      getCoreRowModel: getCoreRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      onColumnVisibilityChange: setColumnVisibility,
-      onColumnFiltersChange: setColumnFilters,
-      onGlobalFilterChange: setGlobalFilter,
-      onSortingChange: setSorting,
-      globalFilterFn: "auto",
-      state: {
-        sorting,
-        columnFilters,
-        columnVisibility,
-        globalFilter
-      },
-    })
+  const { ordersQuery } = useOrders()
 
   return (
-    <div className="flex flex-col gap-2">
-      <DataTable2 table={table} columns={columns} isLoading={ordersQuery.isLoading} />
+    <div className="flex flex-col gap-2 pr-10">
+      <Accordion type="multiple" className="w-full">
+        {ordersQuery.data?.filter(order => order.status === 'preparing').map((order) => (
+          <AccordionItem key={order.id} value={String(order.id!)} className="mb-3">
+            <AccordionTrigger className="bg-gray-100/70 px-2">
+              <div className="flex w-full justify-between gap-1 pr-5">
+                <span>
+                  <strong>Fecha de creación: </strong>
+                  {moment(order.created_at).format("DD/MM/YYYY")}
+                </span>
+                <span>
+                  <strong>Productos: </strong>
+                  {order.order_items?.length} producto(s)
+                </span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[100px]">Imagen</TableHead>
+                    <TableHead>Cantidad</TableHead>
+                    <TableHead>Nombre</TableHead>
+                    <TableHead>Precio</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {order.order_items?.map((oI) => (
+                    <TableRow key={oI.id}>
+                      <TableCell className="w-[80px] relative">
+                        <Image
+                          src={oI.products.image_min}
+                          layout="fill"
+                          objectFit="cover"
+                          alt="Product Image"
+                        />
+                      </TableCell>
+                      <TableCell className="w-28">{oI.quantity}</TableCell>
+                      <TableCell>{oI.products.name}</TableCell>
+                      <TableCell>${oI.products.price}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={3}>Total</TableCell>
+                    <TableCell className="text-right">
+                      ${order.total_price}
+                    </TableCell>
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </AccordionContent>
+          </AccordionItem>  
+        ))}
+      </Accordion>
     </div>
   )
 }

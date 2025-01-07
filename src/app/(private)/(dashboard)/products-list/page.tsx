@@ -17,6 +17,7 @@ import { useMemo, useState } from 'react';
 import DataTableColumnHeader from '@/components/DataTableHeader';
 import { Switch } from '@/components/ui/switch';
 import Image from 'next/image';
+import { toast } from 'sonner';
 
 const ProductsList = () => {
   const [sorting, setSorting] = useState<SortingState>([{ id: 'name', desc: false }]);
@@ -25,6 +26,8 @@ const ProductsList = () => {
   const [globalFilter, setGlobalFilter] = useState('');
   const { productsQuery } = useProducts();
   const products = productsQuery.data || [];
+
+  if (productsQuery.isError) toast.error(productsQuery.error.message);
   
   const columns: ColumnDef<Product>[] = useMemo(
     () =>
@@ -39,7 +42,7 @@ const ProductsList = () => {
             const value = getValue() as string;
             return (
               <>
-                {value ? <Image src={value} width={40} height={40} alt='product-image' /> : '(Sin imagen)'}
+                {value ? <Image src={value} width={40} height={40} alt='product-image' className='bg-slate-200' /> : '(Sin imagen)'}
               </>
             );
           },
