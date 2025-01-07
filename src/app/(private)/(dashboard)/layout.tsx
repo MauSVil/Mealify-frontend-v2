@@ -20,6 +20,8 @@ import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { useBusiness } from "@/contexts/BusinessContext";
 import { Loader2 } from "lucide-react";
+import useSocket from "@/hooks/useSocket";
+import { toast } from "sonner";
 
 export const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const path = usePathname();
@@ -53,6 +55,11 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
 
     return children
   }, [businesses, children, path, router, isLoading])
+
+  useSocket('new-order', (data) => {
+    console.log(data);
+    toast.info('Nueva orden');
+  })
 
   return (
     <SidebarProvider>
