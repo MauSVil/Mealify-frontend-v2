@@ -29,7 +29,6 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
 
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   useEffect(() => {
-    // Configurar audio solo en el cliente
     setAudio(new Audio('/sounds/notification.mp3'));
   }, []);
 
@@ -62,7 +61,6 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
 
     return children
   }, [businesses, children, path, router, isLoading])
-
 
   useSocket('new-order', (data) => {
     console.log(data);
