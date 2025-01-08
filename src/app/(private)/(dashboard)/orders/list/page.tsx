@@ -6,22 +6,32 @@ import { useOrders } from "./_hooks/useOrders"
 import Image from "next/image";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { useEffect, useMemo, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
 
 const OrdersListPage = () => {
   const { ordersQuery, updateOrder } = useOrders();
   const [orderProcessing, setOrderProcessing] = useState<number | undefined>();
 
+  const initialOpenValues = useMemo(() => {
+    return ordersQuery.data?.map(order => String(order.id!)) || [];
+  }, [ordersQuery.data]);
+
+  const [openValues, setOpenValues] = useState(initialOpenValues);
+
+  useEffect(() => {
+    setOpenValues(initialOpenValues);
+  }, [initialOpenValues]);
+
   return (
     <div className="flex flex-col gap-2 pr-10">
-      <Accordion type="multiple" className="w-full">
+      <Accordion type="multiple" className="w-full" value={openValues} onValueChange={(newValues) => setOpenValues(newValues)}>
         {ordersQuery.data
         ?.filter(order => order.status === 'preparing')
         ?.sort((a, b) => new Date(b.created_at!).getTime() - new Date(a.created_at!).getTime())
         .map((order) => (
-          <AccordionItem key={order.id} value={String(order.id!)} className="mb-3">
-            <AccordionTrigger className="bg-gray-100/70 px-2">
+          <AccordionItem key={String(order.id)} value={String(order.id!)} className="mb-3">
+            <AccordionTrigger className="bg-gray-100/40 px-2 rounded-t-md">
               <div className="flex w-full justify-between gap-1 pr-5">
                 <div className="flex flex-col gap-1">
                   <span className="font-semibold">Fecha de creación: </span>
