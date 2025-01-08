@@ -6,9 +6,12 @@ import { useOrders } from "./_hooks/useOrders"
 import Image from "next/image";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 const OrdersListPage = () => {
-  const { ordersQuery } = useOrders()
+  const { ordersQuery, updateOrder } = useOrders();
+  const [orderProcessing, setOrderProcessing] = useState<number | undefined>();
 
   return (
     <div className="flex flex-col gap-2 pr-10">
@@ -73,10 +76,18 @@ const OrdersListPage = () => {
                     variant={"success"}
                     size={"sm"}
                     className="mt-2"
-                    onClick={() => {
-                      console.log(order)
+                    disabled={updateOrder.isPending && orderProcessing === order.id}
+                    onClick={async () => {
+                      setOrderProcessing(order.id)
+                      await updateOrder.mutateAsync({
+                        id: order.id,
+                        status: 'ready_for_pickup'
+                      })
+                      ordersQuery.refetch()
+                      setOrderProcessing(undefined)
                     }}
                   >
+                    {updateOrder.isPending && orderProcessing === order.id && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
                     Marcar como listo
                   </Button>
                 </div>
