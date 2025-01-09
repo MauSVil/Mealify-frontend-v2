@@ -5,9 +5,6 @@ import { CSSProperties, ReactNode } from 'react';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-import { Button } from './ui/button';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from './ui/dropdown-menu';
-
 interface DataTableProps<TData> {
   table: TableType<TData>;
   className?: string;
@@ -27,42 +24,10 @@ export function DataTable2<TData>({
   table,
   isLoading,
   columns,
-  otherItemsOnButtonsHeader,
 }: DataTableProps<TData>) {
 
   return (
     <>
-      <div className="flex items-center pb-2 gap-2">
-        {otherItemsOnButtonsHeader}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="ml-auto" variant="outline">
-              Mostrar / Ocultar Columnas
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter(
-                (column) => column.getCanHide()
-              )
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
       <div className="rounded-md border">
         <Table className='p-2'>
           <TableHeader>
