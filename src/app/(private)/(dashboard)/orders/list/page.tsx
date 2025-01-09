@@ -8,10 +8,15 @@ import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, Table
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
 import { Loader2 } from "lucide-react";
+import useSocket from "@/hooks/useSocket";
 
 const OrdersListPage = () => {
   const { ordersQuery, updateOrder } = useOrders();
   const [orderProcessing, setOrderProcessing] = useState<number | undefined>();
+
+  useSocket('new-order', () => {
+    ordersQuery.refetch();
+  })
 
   const initialOpenValues = useMemo(() => {
     return ordersQuery.data?.map(order => String(order.id!)) || [];
