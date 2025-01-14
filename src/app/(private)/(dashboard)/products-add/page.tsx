@@ -57,110 +57,108 @@ const ProductsAddPage = () => {
     }
 
   return (
-    <div className="flex flex-1 items-center justify-center">
-      <div className="w-4/5">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="flex gap-4" style={{ flexDirection: isMobile ? 'column' : 'row' }}>
-              <div className="bg-white shadow rounded-lg space-y-4 p-4 flex-1">
-                <h1 className="text-2xl font-semibold">
-                  Agregar Producto
-                </h1>
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nombre</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Escribe un nombre..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Descripcion</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Escribe un descripcion..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="price"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Precio</FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="Escribe un precio..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="bg-white shadow rounded-lg space-y-4 p-4 flex-1">
-                <FormField
-                  control={form.control}
-                  name="image"
-                  render={() => (
-                    <FormItem>
-                      <FormLabel>Portada</FormLabel>
-                      <FormControl>
-                        <div className="flex items-center gap-2">
-                          <Input
-                            ref={fileRef}
-                            placeholder="Selecciona una imagen..."
-                            type="file"
-                            accept="image/*"
-                            onChange={(event) => {
-                              const file = event.target.files?.[0]
-                              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                              form.setValue('image', file as any)
-                            }}
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {image && (
-                  <div className="h-full">
-                    <div className="relative h-36 rounded-md flex justify-end">
-                      <div
-                        className="absolute bg-red-600 rounded-md w-4 h-4 z-10 -right-1 -top-1 flex items-center justify-center cursor-pointer"
-                        onClick={() => {
-                          form.setValue('image', undefined)
-                          if (fileRef.current) {
-                            fileRef.current.value = ''
-                          }
-                        }}
-                      >
-                        <p className="text-white text-xs font-semibold">X</p>
-                      </div>
-                      <Image src={URL.createObjectURL(image)} layout="fill" objectFit="cover" alt="image" />
-                    </div>
-                  </div>
+    <div className="flex">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1">
+          <div className="flex gap-4" style={{ flexDirection: isMobile ? 'column' : 'row' }}>
+            <div className="bg-white shadow rounded-lg space-y-4 p-4 flex-1">
+              <h1 className="text-2xl font-semibold">
+                Agregar Producto
+              </h1>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Escribe un nombre..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Descripcion</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Escribe un descripcion..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Precio</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="Escribe un precio..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
-            <div className="flex w-full justify-end">
-              <Button type="submit">
-                {addProductMutation.isPending && <Loader2 className="animate-spin mr-2" size={16} />}
-                Crear
-              </Button>
+            <div className="bg-white shadow rounded-lg space-y-4 p-4 flex-1">
+              <FormField
+                control={form.control}
+                name="image"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Portada</FormLabel>
+                    <FormControl>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          ref={fileRef}
+                          placeholder="Selecciona una imagen..."
+                          type="file"
+                          accept="image/*"
+                          onChange={(event) => {
+                            const file = event.target.files?.[0]
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            form.setValue('image', file as any)
+                          }}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {image && (
+                <div className="h-full">
+                  <div className="relative h-36 rounded-md flex justify-end">
+                    <div
+                      className="absolute bg-red-600 rounded-md w-4 h-4 z-10 -right-1 -top-1 flex items-center justify-center cursor-pointer"
+                      onClick={() => {
+                        form.setValue('image', undefined)
+                        if (fileRef.current) {
+                          fileRef.current.value = ''
+                        }
+                      }}
+                    >
+                      <p className="text-white text-xs font-semibold">X</p>
+                    </div>
+                    <Image src={URL.createObjectURL(image)} layout="fill" objectFit="cover" alt="image" />
+                  </div>
+                </div>
+              )}
             </div>
-          </form>
-        </Form>
-      </div>
+          </div>
+          <div className="flex w-full justify-end">
+            <Button type="submit">
+              {addProductMutation.isPending && <Loader2 className="animate-spin mr-2" size={16} />}
+              Crear
+            </Button>
+          </div>
+        </form>
+      </Form>
     </div>
   )
 }

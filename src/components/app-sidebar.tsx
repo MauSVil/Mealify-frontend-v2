@@ -33,7 +33,7 @@ const data = {
       items: [
         {
           title: "Home",
-          url: "home",
+          url: "/home",
         },
       ],
     },
