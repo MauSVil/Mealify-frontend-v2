@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
 import { Loader2 } from "lucide-react";
 import useSocket from "@/hooks/useSocket";
+import { Badge } from "@/components/ui/badge";
 
 const OrdersListPage = () => {
   const { ordersQuery, updateOrder } = useOrders();
@@ -40,7 +41,14 @@ const OrdersListPage = () => {
               <div className="flex w-full justify-between gap-1 pr-5">
                 <div className="flex flex-col gap-1">
                   <span className="font-semibold">Fecha de creación: </span>
-                  {moment(order.created_at).format("DD/MM/YYYY: HH:mm")}
+                  <div className="flex gap-1">
+                    <Badge>
+                      {moment(order.created_at).format("DD/MM/YYYY: HH:mm")}
+                    </Badge>
+                    <Badge variant={"outline"}>
+                      {moment(order.created_at).fromNow()}
+                    </Badge>
+                  </div>
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="font-semibold">Productos: </span>
