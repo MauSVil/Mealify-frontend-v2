@@ -89,7 +89,7 @@ const OrdersListPage = () => {
                     <TableRow>
                       <TableCell colSpan={3}>Total</TableCell>
                       <TableCell className="text-right">
-                        ${order.total_price}
+                        ${order.order_items?.reduce((acc, oI) => acc + Number(oI.unit_price) * oI.quantity, 0)}
                       </TableCell>
                     </TableRow>
                   </TableFooter>
