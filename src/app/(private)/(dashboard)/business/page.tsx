@@ -124,152 +124,150 @@ const BusinessPage = () => {
   };
 
   return (
-    <div className="flex flex-1 items-center justify-center">
-      <div className="w-4/5">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="flex gap-4" style={{ flexDirection: isMobile ? 'column' : 'row' }}>
-              <div className="bg-white shadow rounded-lg space-y-4 p-4 flex-1">
-                <h1 className="text-2xl font-semibold">Tu negocio</h1>
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nombre</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Escribe un nombre..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Telefono</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Escribe un telefono..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Categoria</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value || undefined}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecciona una categoria..." />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {categories.map((category) => (
-                            <SelectItem key={category.value} value={category.value}>
-                              {category.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="delivery_fee"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Costo de envio
-                        <span className="text-gray-500 text-sm"> (MXN)</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="Tu costo de envio..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex items-center gap-2">
-                  <FormField
-                    control={form.control}
-                    name="image"
-                    render={() => (
-                      <FormItem>
-                        <FormLabel>Portada</FormLabel>
-                        <FormControl>
-                          <div className="flex items-center gap-2">
-                            <Input
-                              ref={fileRef}
-                              placeholder="Selecciona una imagen..."
-                              type="file"
-                              accept="image/*"
-                              onChange={(event) => {
-                                const file = event.target.files?.[0]
-                                form.setValue('image', file)
-                              }}
-                            />
-                            {image && (
-                              <div className="h-full">
-                                <div className="relative w-8 h-8 rounded-md flex justify-end">
-                                  <div
-                                    className="absolute bg-red-600 rounded-md w-4 h-4 z-10 -right-1 -top-1 flex items-center justify-center cursor-pointer"
-                                    onClick={() => {
-                                      form.setValue('image', undefined)
-                                      if (fileRef.current) {
-                                        fileRef.current.value = ''
-                                      }
-                                    }}
-                                  >
-                                    <p className="text-white text-xs font-semibold">X</p>
-                                  </div>
-                                  <Image src={URL.createObjectURL(image)} layout="fill" objectFit="cover" alt="image" />
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="bg-white shadow rounded-lg space-y-4 p-4 flex-1">
-                <FormField
-                  control={form.control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Ubicacion</FormLabel>
-                        <Autocomplete onChange={field.onChange} input={input} setInput={setInput} />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {isLoaded && !input && address.lat !== 0 && address.lng !== 0 && (
-                  <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={15} onClick={handleMapClick} options={{ disableDefaultUI: true }}>
-                    <Marker position={center} />
-                  </GoogleMap>
+    <div className="flex">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1">
+          <div className="flex gap-4" style={{ flexDirection: isMobile ? 'column' : 'row' }}>
+            <div className="bg-white shadow rounded-lg space-y-4 p-4 flex-1">
+              <h1 className="text-2xl font-semibold">Tu negocio</h1>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Escribe un nombre..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
+              />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Telefono</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Escribe un telefono..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Categoria</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value || undefined}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona una categoria..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {categories.map((category) => (
+                          <SelectItem key={category.value} value={category.value}>
+                            {category.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="delivery_fee"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Costo de envio
+                      <span className="text-gray-500 text-sm"> (MXN)</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="Tu costo de envio..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex items-center gap-2">
+                <FormField
+                  control={form.control}
+                  name="image"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>Portada</FormLabel>
+                      <FormControl>
+                        <div className="flex items-center gap-2">
+                          <Input
+                            ref={fileRef}
+                            placeholder="Selecciona una imagen..."
+                            type="file"
+                            accept="image/*"
+                            onChange={(event) => {
+                              const file = event.target.files?.[0]
+                              form.setValue('image', file)
+                            }}
+                          />
+                          {image && (
+                            <div className="h-full">
+                              <div className="relative w-8 h-8 rounded-md flex justify-end">
+                                <div
+                                  className="absolute bg-red-600 rounded-md w-4 h-4 z-10 -right-1 -top-1 flex items-center justify-center cursor-pointer"
+                                  onClick={() => {
+                                    form.setValue('image', undefined)
+                                    if (fileRef.current) {
+                                      fileRef.current.value = ''
+                                    }
+                                  }}
+                                >
+                                  <p className="text-white text-xs font-semibold">X</p>
+                                </div>
+                                <Image src={URL.createObjectURL(image)} layout="fill" objectFit="cover" alt="image" />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
-            <div className="flex w-full justify-end">
-              <Button type="submit" disabled={businessMutation.isPending}>
-                {businessMutation.isPending && <Loader2 className="animate-spin mr-2" size={16} />}
-                Crear
-              </Button>
+            <div className="bg-white shadow rounded-lg space-y-4 p-4 flex-1">
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Ubicacion</FormLabel>
+                      <Autocomplete onChange={field.onChange} input={input} setInput={setInput} />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {isLoaded && !input && address.lat !== 0 && address.lng !== 0 && (
+                <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={15} onClick={handleMapClick} options={{ disableDefaultUI: true }}>
+                  <Marker position={center} />
+                </GoogleMap>
+              )}
             </div>
-          </form>
-        </Form>
-      </div>
+          </div>
+          <div className="flex w-full justify-end">
+            <Button type="submit" disabled={businessMutation.isPending}>
+              {businessMutation.isPending && <Loader2 className="animate-spin mr-2" size={16} />}
+              Crear
+            </Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 }

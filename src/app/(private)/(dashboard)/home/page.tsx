@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const DashboardPage = () => {
-  const { totalQuery, ordersQuery } = useDashboard();
+  const { totalQuery, ordersQuery, refresh } = useDashboard();
 
   return (
     <>
@@ -15,10 +15,7 @@ const DashboardPage = () => {
         size={"icon"}
         variant={"outline"}
         className="self-end"
-        onClick={() => {
-          totalQuery.refetch();
-          ordersQuery.refetch();
-        }}
+        onClick={refresh}
       >
         <RefreshCwIcon />
       </Button>

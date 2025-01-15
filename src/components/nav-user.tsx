@@ -1,6 +1,7 @@
 "use client"
 
 import {
+  Building2,
   ChevronsUpDown,
   LogOut,
 } from "lucide-react"
@@ -23,6 +24,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { useClerk } from "@clerk/nextjs"
+import { useRouter } from "next/navigation"
 
 export function NavUser({
   user,
@@ -35,6 +37,8 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const { signOut } = useClerk()
+
+  const router = useRouter()
 
   return (
     <SidebarMenu>
@@ -61,6 +65,10 @@ export function NavUser({
             align="end"
             sideOffset={4}
           >
+            <DropdownMenuItem onClick={() => router.push("/profile")}>
+              <Building2 />
+              Perfil
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => signOut({ redirectUrl: "/sign-in" })}>
               <LogOut />
               Cerrar sesión

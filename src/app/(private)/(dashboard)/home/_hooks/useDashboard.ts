@@ -4,6 +4,7 @@ import { useApi } from "../../../../../../lib/api";
 import { Order } from "@/types/Order.type";
 
 export const useDashboard = () => {
+
   const { activeBusiness } = useBusiness();
   const api = useApi();
 
@@ -23,8 +24,15 @@ export const useDashboard = () => {
     }
   })
 
+  const refresh = () => {
+    totalQuery.refetch();
+    ordersQuery.refetch();
+  }
+
   return {
     totalQuery,
     ordersQuery,
+
+    refresh,
   }
 }
