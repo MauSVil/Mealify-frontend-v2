@@ -6,6 +6,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import ModalContainer from 'react-modal-promise';
 import { BusinessProvider } from "./contexts/BusinessContext";
 
 const queryClient = new QueryClient()
@@ -15,6 +16,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
     <QueryClientProvider client={queryClient}>
       <ClerkProvider>
         <BusinessProvider>
+          <ModalContainer />
           {children}
         </BusinessProvider>
       </ClerkProvider>
