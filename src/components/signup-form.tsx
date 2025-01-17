@@ -10,6 +10,7 @@ import { useState } from "react";
 import { SignUpConfirmationModal } from "./modals/SignUpConfirmation";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useApi } from "../../lib/api";
 
 interface Props {
   className?: string
@@ -20,6 +21,7 @@ const SignUpForm = (props: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const api = useApi();
   const router = useRouter();
 
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -31,7 +33,8 @@ const SignUpForm = (props: Props) => {
 
     if (completeSignUp.status === 'complete') {
       setActive({ session: completeSignUp.createdSessionId });
-      router.push('/onboarding');
+      await api.post('/auth/register', { role: 'admin', email, clerk_user_id: completeSignUp.createdUserId });
+      router.push('/onboarding/general');
     } else {
       toast.error('Código de verificación incorrecto.');
     }

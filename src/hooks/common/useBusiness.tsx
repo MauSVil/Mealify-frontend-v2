@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
-import { useApi } from "../../../../../../lib/api";
 import { useBusiness as useBusinessContext } from "@/contexts/BusinessContext";
+import { useApi } from "../../../lib/api";
 
 export const useBusiness = () => {
   const api = useApi();
