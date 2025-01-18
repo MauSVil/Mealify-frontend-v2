@@ -13,7 +13,6 @@ import Autocomplete from "@/components/google/Autocomplete";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { UseMutationResult } from "@tanstack/react-query";
 
 const isClient = typeof window !== 'undefined';
 
@@ -49,11 +48,13 @@ const formSchema = z.object({
 
 interface BusinessProps {
   routeTo: string;
-  mutation: UseMutationResult<unknown, Error, FormData, unknown>;
+  handleSubmit: (values: FormData) => Promise<void>;
+  label?: string;
+  loading: boolean;
 }
 
 const BusinessForm = (props: BusinessProps) => {
-  const { routeTo, mutation } = props;
+  const { routeTo, handleSubmit, label = "Crear", loading } = props;
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
@@ -93,7 +94,7 @@ const BusinessForm = (props: BusinessProps) => {
     if (values.image) {
       formData.append('image', values.image);
     }
-    await mutation.mutate(formData);
+    handleSubmit(formData);
     router.push(routeTo);
   }
 
@@ -266,10 +267,10 @@ const BusinessForm = (props: BusinessProps) => {
           <div className="flex w-full justify-end">
             <Button
               type="submit"
-              disabled={mutation.isPending}
+              disabled={loading}
             >
-              {mutation.isPending && <Loader2 className="animate-spin mr-2" size={16} />}
-              Crear
+              {loading && <Loader2 className="animate-spin mr-2" size={16} />}
+              {label}
             </Button>
           </div>
         </form>

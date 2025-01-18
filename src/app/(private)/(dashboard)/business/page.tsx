@@ -5,7 +5,18 @@ import { useBusiness } from "@/hooks/common/useBusiness";
 
 const BusinessPage = () => {
   const { businessMutation } = useBusiness();
-  return <BusinessForm routeTo="/onboarding/general" mutation={businessMutation} />
+
+  const handleFormSubmit = async (data: FormData) => {
+    await businessMutation.mutateAsync(data);
+  }
+
+  return (
+    <BusinessForm
+      routeTo="/onboarding/general"
+      handleSubmit={handleFormSubmit}
+      loading={businessMutation.isPending}
+    />
+  );
 }
 
 export default BusinessPage;

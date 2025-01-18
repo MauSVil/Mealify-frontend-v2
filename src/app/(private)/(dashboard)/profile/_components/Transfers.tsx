@@ -9,26 +9,28 @@ const Transfers = () => {
   const { transfersQuery } = useProfile();
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Creación </TableHead>
-          <TableHead>Monto</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {transfersQuery.data?.map((tr) => (
-          <TableRow key={tr.id}>
-            <TableCell>
-              {moment.unix(tr.created).format('DD/MM/YYYY')}
-            </TableCell>
-            <TableCell>
-              {numeral(tr.amount / 100).format('$0,0.00')}
-            </TableCell>
+    <div className="bg-white shadow rounded-lg space-y-4 p-4 flex-1">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Creación </TableHead>
+            <TableHead>Monto</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {transfersQuery.data?.map((tr) => (
+            <TableRow key={tr.id}>
+              <TableCell>
+                {moment.unix(tr.created).format('DD/MM/YYYY')}
+              </TableCell>
+              <TableCell>
+                {numeral(tr.amount / 100).format('$0,0.00')}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   )
 };
 

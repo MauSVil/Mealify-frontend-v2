@@ -5,7 +5,7 @@ import Transfers from "./_components/Transfers";
 const ProfilePage = () => {
   return (
     <Tabs defaultValue="general" className="w-full">
-      <TabsList className="w-full">
+      <TabsList className="w-full mb-3">
         <TabsTrigger value="general" className="flex-1">General</TabsTrigger>
         <TabsTrigger value="transfers" className="flex-1">Transferencias</TabsTrigger>
       </TabsList>
