@@ -33,7 +33,7 @@ const SignUpForm = (props: Props) => {
 
     if (completeSignUp.status === 'complete') {
       setActive({ session: completeSignUp.createdSessionId });
-      await api.post('/auth/register', { role: 'admin', email, clerk_user_id: completeSignUp.createdUserId });
+      await api.post('/auth/register', { role: 'admin', email, clerk_user_id: completeSignUp.createdUserId, stripe_status: 'error' });
       router.push('/onboarding/general');
     } else {
       toast.error('Código de verificación incorrecto.');

@@ -1,6 +1,5 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useProfile } from "../_hooks/useProfile";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -10,9 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { Loader2, RefreshCwIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
-import { useApi } from "../../../../../../lib/api";
 
 const formSchema = z.object({
   name: z.string().min(2, 'El nombre es obligatorio').max(50, 'El nombre es muy largo'),
@@ -22,8 +20,7 @@ const formSchema = z.object({
 })
 
 const GeneralInfo = () => {
-  const { accountQuery, getAminQuery, editAdminMutation } = useProfile();
-  const api = useApi();
+  const { getAminQuery, editAdminMutation } = useProfile();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,35 +51,8 @@ const GeneralInfo = () => {
       }
     }, [getAminQuery.data]);
 
-  const handleCompleteInformationClick = async () => {
-    const resp = await api.get('/stripe/generate-sign-in-link');
-    window.open(resp.data.link.url, '_blank');
-  }
-
   return (
     <div className="flex-1">
-      {accountQuery?.data?.future_requirements?.disabled_reason || accountQuery?.data?.requirements?.disabled_reason && (
-        <Alert variant={"destructive"} className="flex flex-col mb-5">
-          <AlertTitle className="mb-3 font-bold">
-            Hay acciones pendientes para poder recibir pagos
-          </AlertTitle>
-          <AlertDescription className="mb-3">
-            Puede ser que se haya omitido información importante en tu cuenta de stripe. Por favor, completa la información requerida.
-          </AlertDescription>
-          <div className="flex gap-3">
-            <Button
-              className="self-end"
-              variant={"outline"}
-              onClick={handleCompleteInformationClick}
-            >
-              Completar información
-            </Button>
-            <Button size={"icon"} onClick={() => accountQuery.refetch()}>
-              <RefreshCwIcon size={16} />
-            </Button>
-          </div>
-        </Alert>
-      )}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1">
           <div className="flex gap-4 flex-row">

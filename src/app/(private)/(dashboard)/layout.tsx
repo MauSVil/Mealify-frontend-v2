@@ -13,6 +13,7 @@ import { useBusiness } from "@/contexts/BusinessContext";
 import { Loader2 } from "lucide-react";
 import useSocket from "@/hooks/useSocket";
 import { toast } from "sonner";
+import { useAdmin } from "@/app/(public)/onboarding/(steps)/general/_hooks/useAdmin";
 
 export const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const path = usePathname();
@@ -23,6 +24,7 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
     setAudio(new Audio('/sounds/notification.mp3'));
   }, []);
 
+  const { getAminQuery } = useAdmin();
   const { businesses, isLoading } = useBusiness();
 
   const content = useMemo(() => {
@@ -53,8 +55,7 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
     return children
   }, [businesses, children, path, router, isLoading])
 
-  useSocket('new-order', (data) => {
-    console.log(data);
+  useSocket('new-order', () => {
     toast.info('Nueva orden');
     if (audio) {
       audio.play().catch((err) => {
@@ -67,9 +68,24 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
     <SidebarProvider>
       <AppSidebar businesses={businesses} />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+        <header className="flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
+          </div>
+          <div className="px-4 flex flex-row items-center">
+            {
+              getAminQuery.data?.stripe_status === 'success' ? (
+                <>
+                  <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse mr-2" />
+                  Activo
+                </>
+              ) : (
+                <>
+                  <div className="h-2 w-2 bg-red-500 rounded-full animate-pulse mr-2" />
+                  Error
+                </>
+              )
+            }
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
