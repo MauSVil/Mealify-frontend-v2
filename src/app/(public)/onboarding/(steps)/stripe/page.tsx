@@ -46,13 +46,6 @@ const OnboardingStripePage = () => {
       {
         stripeConnectInstance ? (
           <div className="w-1/2 flex flex-col items-center">
-            <Alert variant={"default"} className="mb-5">
-              <AlertTitle>Atención</AlertTitle>
-              <AlertDescription>
-                Para poder continuar con el proceso de onboarding, es necesario que completes la información de tu cuenta de stripe.
-                Esto te permitirá recibir pagos de tus clientes.
-              </AlertDescription>
-            </Alert>
             <ConnectComponentsProvider connectInstance={stripeConnectInstance}>
               <ConnectAccountOnboarding
                 onExit={async () => {
@@ -67,9 +60,18 @@ const OnboardingStripePage = () => {
             </ConnectComponentsProvider>
           </div>
         ) : (
-          <Button onClick={() => handleFillStripeData()}>
-            Llenar datos de stripe
-          </Button>
+          <div className="w-1/2 flex flex-col items-center">
+            <Alert variant={"default"} className="mb-5">
+              <AlertTitle>Atención</AlertTitle>
+              <AlertDescription>
+                Para poder continuar con el proceso de onboarding, es necesario que completes la información de tu cuenta de stripe.
+                Esto te permitirá recibir pagos de tus clientes.
+              </AlertDescription>
+            </Alert>
+            <Button onClick={() => handleFillStripeData()}>
+              Llenar datos de stripe
+            </Button>
+          </div>
         )
       }
     </div>
