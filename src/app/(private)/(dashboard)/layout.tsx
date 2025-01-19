@@ -14,10 +14,12 @@ import { Loader2 } from "lucide-react";
 import useSocket from "@/hooks/useSocket";
 import { toast } from "sonner";
 import { useAdmin } from "@/app/(public)/onboarding/(steps)/general/_hooks/useAdmin";
+import { useApi } from "../../../../lib/api";
 
 export const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const path = usePathname();
   const router = useRouter();
+  const api = useApi();
 
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   useEffect(() => {
@@ -72,17 +74,34 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
           </div>
-          <div className="px-4 flex flex-row items-center">
+          <div className="px-4 flex flex-row items-center gap-2">
             {
               getAminQuery.data?.stripe_status === 'success' ? (
                 <>
-                  <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse mr-2" />
-                  Activo
+                  <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse" />
+                  <p>
+                    Puede recibir pagos
+                  </p>
                 </>
               ) : (
                 <>
-                  <div className="h-2 w-2 bg-red-500 rounded-full animate-pulse mr-2" />
-                  Error
+                  <div className="h-2 w-2 bg-red-500 rounded-full animate-pulse" />
+                  <p>
+                    No puede recibir pagos
+                  </p>
+                  <Button
+                    onClick={async () => {
+                      try {
+                        const { data } = await api.get('/stripe/generate-sign-in-link');
+                        console.log({ data });
+                        window.open(data.url.link, '_blank');
+                      } catch (error) {
+                        console.error(error);
+                      }
+                    }}
+                  >
+                    Corregir
+                  </Button>
                 </>
               )
             }
