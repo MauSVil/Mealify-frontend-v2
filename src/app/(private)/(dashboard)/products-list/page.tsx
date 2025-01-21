@@ -6,18 +6,30 @@ import { toast } from 'sonner';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { Button } from "@/components/ui/button";
+import { Edit, Trash } from "lucide-react";
+import numeral from "numeral";
 
 const ProductsList = () => {
+  const [productsModified, setProductsModified] = useState<Record<string, boolean>>({});
+
   const [query, setQuery] = useState('');
   const { productsQuery } = useProducts();
-  const products = productsQuery.data || [];
+  const products = useMemo(() => productsQuery.data || [], [productsQuery.data]);
 
   if (productsQuery.isError) toast.error(productsQuery.error.message);
 
   return (
     <>
-      <Input placeholder="Buscar producto" onChange={(e) => setQuery(e.target.value)} value={query} />
+      <div className="flex gap-2">
+        <Input placeholder="Buscar producto" onChange={(e) => setQuery(e.target.value)} value={query} />
+        {
+          Object.keys(productsModified).length > 0 && (
+            <Button>Aplicar cambios ({Object.keys(productsModified).length})</Button>
+          )
+        }
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -25,6 +37,7 @@ const ProductsList = () => {
             <TableHead>Nombre</TableHead>
             <TableHead>Precio</TableHead>
             <TableHead>Disponibilidad</TableHead>
+            <TableHead>Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -41,9 +54,26 @@ const ProductsList = () => {
                 />
               </TableCell>
               <TableCell>{product.name}</TableCell>
-              <TableCell>${product.price}</TableCell>
               <TableCell>
-                <Switch checked={product.is_available} />
+                {numeral(product.price).format('$0,0.00')}
+              </TableCell>
+              <TableCell>
+                <Switch
+                  checked={
+                    productsModified[product.id!] !== undefined
+                      ? productsModified[product.id!]
+                      : product.is_available
+                  }
+                  onCheckedChange={(checked) => setProductsModified((prev) => ({ ...prev, [product.id!]: checked }))}
+                />
+              </TableCell>
+              <TableCell className="flex gap-2">
+                <Button size={"icon"} className="rounded-full">
+                  <Edit size={10} />
+                </Button>
+                <Button size={"icon"} variant={"destructive"} className="rounded-full">
+                  <Trash size={10} />
+                </Button>
               </TableCell>
             </TableRow>
           ))}
