@@ -2,6 +2,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PreparingOrders from "./_components/PreparingOrders";
+import ReadyToDeliver from "./_components/ReadyToDeliver";
 
 const OrdersListPage = () => {
   return (
@@ -13,7 +14,9 @@ const OrdersListPage = () => {
       <TabsContent value="preparing">
         <PreparingOrders />
       </TabsContent>
-      <TabsContent value="password">Change your password here.</TabsContent>
+      <TabsContent value="ready_for_pickup">
+        <ReadyToDeliver />
+      </TabsContent>
     </Tabs>
   )
 }
