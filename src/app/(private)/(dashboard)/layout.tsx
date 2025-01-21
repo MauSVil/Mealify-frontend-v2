@@ -32,7 +32,7 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
       return children
     }
 
-    if (isLoading) {
+    if (isLoading || getAminQuery.isLoading) {
       return (
         <div className="flex-1 flex items-center justify-center">
           <Loader2 className="w-8 h-8 animate-spin mr-2" />
