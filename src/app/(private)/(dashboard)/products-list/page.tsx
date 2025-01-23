@@ -15,7 +15,7 @@ const ProductsList = () => {
   const [productsModified, setProductsModified] = useState<Record<string, boolean>>({});
 
   const [query, setQuery] = useState('');
-  const { productsQuery } = useProducts();
+  const { productsQuery, modifiedProductsMutation } = useProducts();
   const products = useMemo(() => productsQuery.data || [], [productsQuery.data]);
 
   if (productsQuery.isError) toast.error(productsQuery.error.message);
@@ -26,7 +26,7 @@ const ProductsList = () => {
         <Input placeholder="Buscar producto" onChange={(e) => setQuery(e.target.value)} value={query} />
         {
           Object.keys(productsModified).length > 0 && (
-            <Button>Aplicar cambios ({Object.keys(productsModified).length})</Button>
+            <Button onClick={() => modifiedProductsMutation.mutate(productsModified)}>Aplicar cambios ({Object.keys(productsModified).length})</Button>
           )
         }
       </div>
