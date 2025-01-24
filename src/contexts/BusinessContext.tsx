@@ -29,7 +29,7 @@ export const BusinessProvider = ({ children }: { children: ReactNode }) => {
       const socket = getSocket();
       for (const business of businessesQuery.data) {
         console.log('joining room', business.id);
-        socket.emit("message", { type: "joinRoom", roomId: business.id! });
+        socket.emit("message", { type: "joinRoom", roomId: `business_${business.id!}` });
       }
     }
   }, [businessesQuery.data, businessesQuery.isFetched]);
