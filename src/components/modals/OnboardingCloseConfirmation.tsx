@@ -18,7 +18,6 @@ const OnboardingCloseConfirmation = (props: InstanceProps<unknown, unknown>) => 
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
             Si sales del onboarding, puede que la plataforma no funcione correctamente.
-            No podras volver a entrar al onboarding.
           </AlertDescription>
         </Alert>
         <AlertDialogFooter>

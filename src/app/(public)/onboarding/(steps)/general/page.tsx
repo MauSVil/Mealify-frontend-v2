@@ -37,9 +37,13 @@ const OnboardingGeneralPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      if (!form.control._formState.isDirty) {
+        router.push('/onboarding/stripe');
+        return
+      }
       await editAdminMutation.mutateAsync(values);
       toast.success('Datos guardados correctamente');
-      router.push('/onboarding/business');
+      router.push('/onboarding/stripe');
     } catch (error) {
       if (error instanceof AxiosError) {
         toast.error(error.response?.data.message);
@@ -51,9 +55,15 @@ const OnboardingGeneralPage = () => {
 
   useEffect(() => {
     if (getAminQuery.data) {
-      form.reset(getAminQuery.data);
+      const safeData = {
+        name: getAminQuery.data.name || "",
+        first_last_name: getAminQuery.data.first_last_name || "",
+        second_last_name: getAminQuery.data.second_last_name || "",
+        phone: getAminQuery.data.phone || "",
+      };
+      form.reset(safeData);
     }
-  }, [getAminQuery.data]);
+  }, [getAminQuery.data, form]);
 
   return (
     <div className="flex">

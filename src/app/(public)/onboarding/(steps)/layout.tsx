@@ -8,6 +8,7 @@ import { ReactNode, useEffect } from "react";
 import { useAdmin } from "./general/_hooks/useAdmin";
 
 const OnboardingStepsLayout = ({ children }: { children: ReactNode }) => {
+  const step = usePathname().includes('general') ? 1 : 2;
   const router = useRouter();
   const path = usePathname();
 
@@ -28,7 +29,7 @@ const OnboardingStepsLayout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="flex-1 w-full p-5 box-border">
-      <div className="flex justify-between items-center mb-10">
+      <div className="flex gap-10 items-center mb-10">
         <Button
           variant={"default"}
           size={"icon"}
@@ -43,6 +44,9 @@ const OnboardingStepsLayout = ({ children }: { children: ReactNode }) => {
         >
           {path === '/onboarding/general' ? <X /> : <ArrowLeft />}
         </Button>
+        <p>
+          {step} / {2}
+        </p>
       </div>
       {children}
     </div>
