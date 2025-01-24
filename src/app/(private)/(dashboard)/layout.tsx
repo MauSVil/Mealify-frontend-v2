@@ -14,6 +14,7 @@ import { Loader2 } from "lucide-react";
 import useSocket from "@/hooks/useSocket";
 import { toast } from "sonner";
 import { useAdmin } from "@/app/(public)/onboarding/(steps)/general/_hooks/useAdmin";
+import { getSocket } from "@/lib/socket";
 
 export const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const path = usePathname();
@@ -23,9 +24,16 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     setAudio(new Audio('/sounds/notification.mp3'));
   }, []);
-
+  
   const { getAminQuery } = useAdmin();
   const { businesses, isLoading } = useBusiness();
+  
+  useEffect(() => {
+    if (getAminQuery.isLoading) return;
+    const socket = getSocket();
+    console.log('joinRoom', `admin_${getAminQuery.data?.id}`);
+    socket.emit("message", { type: "joinRoom", roomId: `admin_${getAminQuery.data?.id}` });
+  }, [getAminQuery.isLoading, getAminQuery.data?.id]);
 
   const content = useMemo(() => {
     if (path === "/business") {
@@ -91,6 +99,11 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
       });
     }
   })
+
+  useSocket('stripe-status', () => {
+    toast.info('Estado de Stripe actualizado');
+    getAminQuery.refetch();
+  });
 
   return (
     <SidebarProvider>

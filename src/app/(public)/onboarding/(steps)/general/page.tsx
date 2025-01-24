@@ -37,10 +37,6 @@ const OnboardingGeneralPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      if (!form.control._formState.isDirty) {
-        router.push('/onboarding/stripe');
-        return
-      }
       await editAdminMutation.mutateAsync(values);
       toast.success('Datos guardados correctamente');
       router.push('/onboarding/stripe');
