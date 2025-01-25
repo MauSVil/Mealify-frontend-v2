@@ -13,7 +13,8 @@ export const orderSchema = z.object({
   latitude: z.number(),
   longitude: z.number(),
   created_at: z.date().optional(),
-  updatedAt: z.date().optional(),
+  updated_at: z.date().optional(),
+  delay_date: z.date().optional(),
   order_items: z.array(z.object({
     id: z.number(),
     order_id: z.number(),

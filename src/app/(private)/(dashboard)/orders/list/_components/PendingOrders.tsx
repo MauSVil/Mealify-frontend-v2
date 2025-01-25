@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import useSocket from "@/hooks/useSocket"
-import { Loader2 } from "lucide-react"
+import { AlertCircle, Loader2 } from "lucide-react"
 import moment from "moment"
 import Image from "next/image"
 import { useEffect, useMemo, useState } from "react"
@@ -61,6 +61,17 @@ const PendingOrders = () => {
                       <Badge variant={"outline"}>
                         {moment(order.created_at).fromNow()}
                       </Badge>
+                      {
+                        order.delay_date && (
+                          <Badge variant={"destructive"}>
+                            <div className="flex gap-1 items-center">
+                              <AlertCircle size={10} />
+                              <span>Retraso:</span>
+                              {moment(order.delay_date).fromNow()}
+                            </div>
+                          </Badge>
+                        )
+                      }
                     </div>
                   </div>
                   <div className="flex flex-col gap-1">
@@ -108,24 +119,31 @@ const PendingOrders = () => {
                     </TableFooter>
                   </Table>
                   <div className="flex w-full justify-end">
-                    <Button
-                      variant={"success"}
-                      size={"sm"}
-                      className="mt-2"
-                      disabled={updateOrder.isPending && orderProcessing === order.id}
-                      onClick={async () => {
-                        setOrderProcessing(order.id)
-                        await updateOrder.mutateAsync({
-                          id: order.id,
-                          status: 'preparing'
-                        })
-                        ordersQuery.refetch()
-                        setOrderProcessing(undefined)
-                      }}
-                    >
-                      {updateOrder.isPending && orderProcessing === order.id && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
-                      Aceptar
-                    </Button>
+                    <div className="flex flex-row gap-2 items-center justify-center">
+                      <Button
+                        variant={"destructive"}
+                        size={"sm"}
+                      >
+                        Rechazar
+                      </Button>
+                      <Button
+                        variant={"success"}
+                        size={"sm"}
+                        disabled={updateOrder.isPending && orderProcessing === order.id}
+                        onClick={async () => {
+                          setOrderProcessing(order.id)
+                          await updateOrder.mutateAsync({
+                            id: order.id,
+                            status: 'preparing'
+                          })
+                          ordersQuery.refetch()
+                          setOrderProcessing(undefined)
+                        }}
+                      >
+                        {updateOrder.isPending && orderProcessing === order.id && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
+                        Aceptar
+                      </Button>
+                    </div>
                   </div>
                 </>
               </AccordionContent>
