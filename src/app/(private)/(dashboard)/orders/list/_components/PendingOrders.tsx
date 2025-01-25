@@ -1,13 +1,31 @@
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useOrders } from "../_hooks/useOrders";
-import { Button } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import Image from "next/image";
-import { Loader2 } from "lucide-react";
-import { useMemo } from "react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import useSocket from "@/hooks/useSocket"
+import { Loader2 } from "lucide-react"
+import moment from "moment"
+import Image from "next/image"
+import { useEffect, useMemo, useState } from "react"
+import { useOrders } from "../_hooks/useOrders"
 
-const ReadyToDeliver = () => {
-  const { ordersQuery } = useOrders();
+const PendingOrders = () => {
+  const { ordersQuery, updateOrder } = useOrders();
+  const [orderProcessing, setOrderProcessing] = useState<number | undefined>();
+
+  useSocket('new-order', () => {
+    ordersQuery.refetch();
+  })
+
+  const initialOpenValues = useMemo(() => {
+    return ordersQuery.data?.map(order => String(order.id!)) || [];
+  }, [ordersQuery.data]);
+
+  const [openValues, setOpenValues] = useState(initialOpenValues);
+
+  useEffect(() => {
+    setOpenValues(initialOpenValues);
+  }, [initialOpenValues]);
 
   const content = useMemo(() => {
     if (ordersQuery.isLoading) {
@@ -17,29 +35,37 @@ const ReadyToDeliver = () => {
         </div>
       )
     }
-    if (ordersQuery.data?.filter(o => o.status === 'ready_for_pickup').length === 0) {
+    if (ordersQuery.data?.filter(o => o.status === 'pending' || o.status === 'restaurant_delayed').length === 0) {
       return (
         <div className="h-96 flex items-center justify-center">
-          No hay órdenes para preparar
+          No hay órdenes pendientes
         </div>
       )
     }
     return (
       <div className="flex flex-col gap-2 pr-10">
-        <Accordion type="multiple" className="w-full">
+        <Accordion type="multiple" className="w-full" value={openValues} onValueChange={(newValues) => setOpenValues(newValues)}>
           {ordersQuery.data
-          ?.filter(order => order.status === 'ready_for_pickup')
+          ?.filter(order => order.status === 'pending' || order.status === 'restaurant_delayed')
           ?.sort((a, b) => new Date(b.created_at!).getTime() - new Date(a.created_at!).getTime())
           .map((order) => (
             <AccordionItem key={String(order.id)} value={String(order.id!)} className="mb-3">
               <AccordionTrigger className="bg-gray-100/40 px-2 rounded-t-md">
                 <div className="flex w-full justify-between gap-1 pr-5">
                   <div className="flex flex-col gap-1">
-                    <span className="font-semibold">Id: </span>
-                    <span className="font-bold text-lg">{order.id}</span>
+                    <span className="font-semibold">Fecha de creación: </span>
+                    <div className="flex gap-1">
+                      <Badge>
+                        {moment(order.created_at).format("DD/MM/YYYY: HH:mm")}
+                      </Badge>
+                      <Badge variant={"outline"}>
+                        {moment(order.created_at).fromNow()}
+                      </Badge>
+                    </div>
                   </div>
                   <div className="flex flex-col gap-1">
                     <span className="font-semibold">Productos: </span>
+
                     {order.order_items?.length} producto(s)
                   </div>
                 </div>
@@ -86,20 +112,19 @@ const ReadyToDeliver = () => {
                       variant={"success"}
                       size={"sm"}
                       className="mt-2"
-                      disabled
-                      // disabled={updateOrder.isPending && orderProcessing === order.id}
-                      // onClick={async () => {
-                      //   setOrderProcessing(order.id)
-                      //   await updateOrder.mutateAsync({
-                      //     id: order.id,
-                      //     status: 'ready_for_pickup'
-                      //   })
-                      //   ordersQuery.refetch()
-                      //   setOrderProcessing(undefined)
-                      // }}
+                      disabled={updateOrder.isPending && orderProcessing === order.id}
+                      onClick={async () => {
+                        setOrderProcessing(order.id)
+                        await updateOrder.mutateAsync({
+                          id: order.id,
+                          status: 'preparing'
+                        })
+                        ordersQuery.refetch()
+                        setOrderProcessing(undefined)
+                      }}
                     >
-                      {/* {updateOrder.isPending && orderProcessing === order.id && <Loader2 className="w-5 h-5 mr-2 animate-spin" />} */}
-                      Marcar como entregada
+                      {updateOrder.isPending && orderProcessing === order.id && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
+                      Aceptar
                     </Button>
                   </div>
                 </>
@@ -114,4 +139,4 @@ const ReadyToDeliver = () => {
   return content;
 }
 
-export default ReadyToDeliver;
+export default PendingOrders

@@ -69,7 +69,7 @@ export function NavUser({
               <Building2 />
               Perfil
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => signOut({ redirectUrl: "/sign-in" })}>
+            <DropdownMenuItem onClick={async () => await signOut({ redirectUrl: "/sign-in" })}>
               <LogOut />
               Cerrar sesión
             </DropdownMenuItem>
