@@ -134,7 +134,7 @@ const PendingOrders = () => {
         </Accordion>
       </div>
     )
-  }, [ordersQuery.data]);
+  }, [ordersQuery.data, openValues]);
 
   return content;
 }
