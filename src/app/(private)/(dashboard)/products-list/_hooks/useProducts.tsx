@@ -11,7 +11,7 @@ export const useProducts = () => {
   const productsQuery = useQuery<Product[]>({
     queryKey: ["products", activeBusiness.id],
     queryFn: async () => {
-      const { data } = await api.get(`/products/restaurant/${activeBusiness.id}`);
+      const { data } = await api.get(`/products`);
       return data;
     },
   })
