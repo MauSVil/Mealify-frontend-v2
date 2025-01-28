@@ -82,9 +82,9 @@ export const LoginForm = ({
               </div>
               <div className="text-center text-sm">
                 No tienes una cuenta?{" "}
-                <a href="#" className="underline underline-offset-4">
+                <p className="underline underline-offset-4" onClick={() => router.replace('/sign-up')}>
                   Regístrate
-                </a>
+                </p>
               </div>
             </div>
           </form>

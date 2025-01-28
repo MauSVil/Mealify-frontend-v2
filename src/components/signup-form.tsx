@@ -92,9 +92,9 @@ const SignUpForm = (props: Props) => {
               </div>
               <div className="text-center text-sm">
                 Ya tienes cuenta?{" "}
-                <a href="#" className="underline underline-offset-4">
+                <p className="underline underline-offset-4" onClick={() => router.replace('/sign-in')}>
                   Inicia sesión
-                </a>
+                </p>
               </div>
             </div>
           </form>

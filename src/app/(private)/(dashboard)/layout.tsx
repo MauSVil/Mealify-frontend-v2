@@ -15,10 +15,12 @@ import useSocket from "@/hooks/useSocket";
 import { toast } from "sonner";
 import { useAdmin } from "@/app/(public)/onboarding/(steps)/general/_hooks/useAdmin";
 import { getSocket } from "@/lib/socket";
+import { useApi } from "../../../../lib/api";
 
 export const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const path = usePathname();
   const router = useRouter();
+  const api = useApi();
 
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   useEffect(() => {
@@ -117,6 +119,14 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
                 <Button
                   variant={"outline"}
                   className="flex gap-2"
+                  onClick={async () => {
+                    const { data } = await api.get('/stripe/generate-sign-in-link');
+                    console.log({ data })
+                    if (data?.link) {
+                      window.open(data.link.url, '_blank');
+                    }
+
+                  }}
                 >
                   {status}
                   Ir a dashboard de Stripe
