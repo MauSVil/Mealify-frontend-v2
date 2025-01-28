@@ -26,7 +26,14 @@ const ProductsList = () => {
         <Input placeholder="Buscar producto" onChange={(e) => setQuery(e.target.value)} value={query} />
         {
           Object.keys(productsModified).length > 0 && (
-            <Button onClick={() => modifiedProductsMutation.mutate(productsModified)}>Aplicar cambios ({Object.keys(productsModified).length})</Button>
+            <Button
+              onClick={async () => {
+                await modifiedProductsMutation.mutateAsync(productsModified);
+                setProductsModified({});
+              }}
+            >
+              Aplicar cambios ({Object.keys(productsModified).length})
+            </Button>
           )
         }
       </div>
