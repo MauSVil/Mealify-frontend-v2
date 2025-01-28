@@ -8,11 +8,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Autocomplete from "@/components/google/Autocomplete";
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Restaurant } from "@/types/Restaurant.type";
 
 const isClient = typeof window !== 'undefined';
 
@@ -47,14 +48,23 @@ const formSchema = z.object({
 })
 
 interface BusinessProps {
-  routeTo: string;
+  routeTo?: string;
   handleSubmit: (values: FormData) => Promise<void>;
   label?: string;
   loading: boolean;
+  title?: string;
+  business?: Restaurant;
 }
 
 const BusinessForm = (props: BusinessProps) => {
-  const { routeTo, handleSubmit, label = "Crear", loading } = props;
+  const {
+    routeTo,
+    handleSubmit,
+    label = "Crear",
+    loading,
+    title = 'Tu negocio',
+    business
+  } = props;
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
@@ -95,8 +105,8 @@ const BusinessForm = (props: BusinessProps) => {
       formData.append('image', values.image);
     }
     handleSubmit(formData);
-    router.push(routeTo);
-  }
+    if (routeTo) router.push(routeTo);
+  };
 
   const center = useMemo(() => {
     return {
@@ -127,13 +137,29 @@ const BusinessForm = (props: BusinessProps) => {
     }
   };
 
+  useEffect(() => {
+    if (business) {
+      form.reset({
+        name: business.name,
+        phone: business.phone || '',
+        category: 'Fast Food',
+        delivery_fee: business.delivery_fee,
+        address: {
+          lat: Number(business.latitude),
+          lng: Number(business.longitude),
+          address: business.address,
+        },
+      })
+    }
+  }, [business])
+
   return (
     <div className="flex">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1">
           <div className="flex gap-4 flex-row">
             <div className="bg-white shadow rounded-lg space-y-4 p-4 flex-1">
-              <h1 className="text-2xl font-semibold">Tu negocio</h1>
+              <h1 className="text-2xl font-semibold">{title}</h1>
               <FormField
                 control={form.control}
                 name="name"

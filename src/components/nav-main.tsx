@@ -35,7 +35,7 @@ export function NavMain({
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform {"1.0.0"}</SidebarGroupLabel>
+      <SidebarGroupLabel>Version {"1.0.0"}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible

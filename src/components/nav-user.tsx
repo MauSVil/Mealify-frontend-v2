@@ -4,6 +4,7 @@ import {
   Building2,
   ChevronsUpDown,
   LogOut,
+  User,
 } from "lucide-react"
 
 import {
@@ -66,8 +67,12 @@ export function NavUser({
             sideOffset={4}
           >
             <DropdownMenuItem onClick={() => router.push("/profile")}>
+              <User />
+              Configuracion de cuenta
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/business/edit")}>
               <Building2 />
-              Perfil
+              Configuracion del negocio
             </DropdownMenuItem>
             <DropdownMenuItem onClick={async () => await signOut({ redirectUrl: "/sign-in" })}>
               <LogOut />
