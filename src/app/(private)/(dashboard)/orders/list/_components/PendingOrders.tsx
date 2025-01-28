@@ -119,10 +119,19 @@ const PendingOrders = () => {
                     </TableFooter>
                   </Table>
                   <div className="flex w-full justify-end">
-                    <div className="flex flex-row gap-2 items-center justify-center">
+                    <div className="flex flex-row gap-2 items-center justify-center mt-3">
                       <Button
                         variant={"destructive"}
                         size={"sm"}
+                        onClick={async () => {
+                          setOrderProcessing(order.id)
+                          await updateOrder.mutateAsync({
+                            id: order.id,
+                            status: 'cancelled'
+                          })
+                          ordersQuery.refetch()
+                          setOrderProcessing(undefined)
+                        }}
                       >
                         Rechazar
                       </Button>
