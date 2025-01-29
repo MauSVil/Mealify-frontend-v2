@@ -127,7 +127,7 @@ const PendingOrders = () => {
                           setOrderProcessing(order.id)
                           await updateOrder.mutateAsync({
                             id: order.id,
-                            status: 'cancelled'
+                            status: 'cancelled_by_restaurant'
                           })
                           ordersQuery.refetch()
                           setOrderProcessing(undefined)
