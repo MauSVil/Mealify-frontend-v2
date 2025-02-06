@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useApi } from "../../../../../../lib/api";
 import { useBusiness } from "@/contexts/BusinessContext";
 import { Product } from "@/types/Product.type";
 import { toast } from "sonner";
+import { useApi } from "../../../../../../../lib/api";
 
 export const useProducts = () => {
   const api = useApi();

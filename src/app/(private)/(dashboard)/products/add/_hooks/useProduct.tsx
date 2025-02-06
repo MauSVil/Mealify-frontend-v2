@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query"
-import { useApi } from "../../../../../../lib/api"
+import { useApi } from "../../../../../../../lib/api";
 
 export const useProduct = () => {
   const api = useApi();

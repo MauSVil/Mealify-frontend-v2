@@ -10,8 +10,11 @@ import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash } from "lucide-react";
 import numeral from "numeral";
+import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
+import { useApi } from "../../../../../../lib/api";
 
 const ProductsList = () => {
+  const api = useApi();
   const [productsModified, setProductsModified] = useState<Record<string, boolean>>({});
 
   const [query, setQuery] = useState('');
@@ -19,6 +22,19 @@ const ProductsList = () => {
   const products = useMemo(() => productsQuery.data || [], [productsQuery.data]);
 
   if (productsQuery.isError) toast.error(productsQuery.error.message);
+
+  const handleDeleteProduct = async (productId: number) => {
+    try {
+      await ConfirmationModal({
+        title: '¿Estás seguro de que deseas eliminar este producto?',
+        cancelText: 'Cancelar',
+        confirmationText: 'Eliminar',
+      })
+      await api.delete(`/products/${productId}`);
+    } catch (err) {
+      console.log('cancel delete product', err, productId);
+    }
+  }
 
   return (
     <>
@@ -78,7 +94,7 @@ const ProductsList = () => {
                 <Button size={"icon"} className="rounded-full">
                   <Edit size={10} />
                 </Button>
-                <Button size={"icon"} variant={"destructive"} className="rounded-full">
+                <Button size={"icon"} variant={"destructive"} className="rounded-full" onClick={() => handleDeleteProduct(product.id!)}>
                   <Trash size={10} />
                 </Button>
               </TableCell>

@@ -44,11 +44,11 @@ const data = {
       items: [
         {
           title: "List",
-          url: "/products-list",
+          url: "/products/list",
         },
         {
           title: "Add",
-          url: "/products-add",
+          url: "/products/add",
         },
       ],
     },

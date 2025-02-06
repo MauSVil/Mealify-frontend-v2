@@ -53,7 +53,7 @@ const ProductsAddPage = () => {
         formData.append('image', values.image);
       }
       await addProductMutation.mutate(formData);
-      router.push('/products-list')
+      router.push('/products/list')
     }
 
   return (
