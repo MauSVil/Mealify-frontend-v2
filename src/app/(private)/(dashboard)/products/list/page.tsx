@@ -12,9 +12,11 @@ import { Edit, Trash } from "lucide-react";
 import numeral from "numeral";
 import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
 import { useApi } from "../../../../../../lib/api";
+import { useRouter } from "next/navigation";
 
 const ProductsList = () => {
   const api = useApi();
+  const router = useRouter();
   const [productsModified, setProductsModified] = useState<Record<string, boolean>>({});
 
   const [query, setQuery] = useState('');
@@ -91,7 +93,7 @@ const ProductsList = () => {
                 />
               </TableCell>
               <TableCell className="flex gap-2">
-                <Button size={"icon"} className="rounded-full">
+                <Button size={"icon"} className="rounded-full" onClick={() => router.push(`/products/edit/${product.id}`)}>
                   <Edit size={10} />
                 </Button>
                 <Button size={"icon"} variant={"destructive"} className="rounded-full" onClick={() => handleDeleteProduct(product.id!)}>
