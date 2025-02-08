@@ -67,7 +67,7 @@ const ProductForm = (props: ProductProps) => {
     if (values.image) {
       formData.append('image', values.image);
     }
-    handleSubmit(formData);
+    await handleSubmit(formData);
     router.push(routeTo);
   }
 
