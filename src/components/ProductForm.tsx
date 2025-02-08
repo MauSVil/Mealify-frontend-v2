@@ -78,9 +78,12 @@ const ProductForm = (props: ProductProps) => {
         name: product.name,
         description: product.description,
         price: product.price,
-        image: undefined,
         group: product.group,
       })
+      if (product.image_max) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        form.setValue('image', product.image_max as any)
+      }
     }
   }, [product])
 
@@ -224,7 +227,12 @@ const ProductForm = (props: ProductProps) => {
                   >
                     <p className="text-white text-xs font-semibold">X</p>
                   </div>
-                  <Image src={URL.createObjectURL(image)} layout="fill" objectFit="cover" alt="image" />
+                  <Image
+                    src={typeof image === "string" ? image : URL.createObjectURL(image)}
+                    layout="fill"
+                    objectFit="cover"
+                    alt="image"
+                  />
                 </div>
               </div>
             )}

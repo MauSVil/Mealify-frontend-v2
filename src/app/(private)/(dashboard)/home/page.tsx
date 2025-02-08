@@ -84,15 +84,15 @@ const DashboardPage = () => {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Total de ventas</CardTitle>
+            <CardTitle>Total de productos</CardTitle>
             <CardDescription>
-              Total de ventas en el mes - {new Date().toLocaleString('default', { month: 'long' })}
+              Productos en el inventario
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {totalQuery.isLoading || totalQuery.isRefetching ? <Loader2 className="animate-spin" /> : (
+            {ordersQuery.isLoading || ordersQuery.isRefetching ? <Loader2 className="animate-spin" /> : (
               <p className="text-2xl font-bold">
-                {numeral(totalQuery.data).format("$0,0.00")}
+                {`${ordersQuery.data?.length || 3} producto(s)`}
               </p>
             )}
           </CardContent>
