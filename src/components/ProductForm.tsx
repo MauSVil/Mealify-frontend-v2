@@ -14,6 +14,7 @@ import { useEffect, useRef } from "react"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command";
 import { cn } from "@/lib/utils";
+import InputFormField from "./form/InputFormField";
 
 const isClient = typeof window !== 'undefined';
 
@@ -31,10 +32,10 @@ const formSchema = z.object({
   description: z.string().min(1, { message: "Descripcion es requerido" }),
   price: z.coerce.number().min(1, { message: "Precio es requerido" }),
   image: isClient
-      ? z.instanceof(File).refine((file) => file.size < 5000000, {
+      ? z.instanceof(File, { message: 'Debe de contener una imagen'}).refine((file) => file.size < 5000000, {
           message: 'La imagen es muy grande',
-        }).optional()
-      : z.any().optional(),
+        })
+      : z.any(),
 }).and(productSchema.pick({ group: true }));
 
 const ProductForm = (props: ProductProps) => {
@@ -91,45 +92,35 @@ const ProductForm = (props: ProductProps) => {
             <h1 className="text-2xl font-semibold">
               {title}
             </h1>
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nombre</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Escribe un nombre..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <InputFormField
+              controllerProps={{
+                control: form.control,
+                name: "name",
+              }}
+              label="Nombre"
+              hidden={false}
+              placeholder="Escribe un nombre..."
             />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Descripcion</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Escribe un descripcion..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <InputFormField
+              controllerProps={{
+                control: form.control,
+                name: "description",
+              }}
+              label="Descripcion"
+              hidden={false}
+              placeholder="Escribe una descripcion..."
             />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Precio</FormLabel>
-                  <FormControl>
-                    <Input type="number" placeholder="Escribe un precio..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+            <InputFormField
+              controllerProps={{
+                control: form.control,
+                name: "price",
+              }}
+              label="Precio"
+              hidden={false}
+              placeholder="Escribe un precio..."
+              type="number"
             />
+
             <FormField
               control={form.control}
               name="group"

@@ -36,10 +36,10 @@ const formSchema = z.object({
   category: z.enum(['Mexicana', 'Italiana', 'China', 'Japonesa', 'Fast Food']),
   delivery_fee: z.number().min(0, 'El costo de envio es obligatorio'),
   image: isClient
-    ? z.instanceof(File).refine((file) => file.size < 5000000, {
+    ? z.instanceof(File, { message: 'Debe de contener una imagen'}).refine((file) => file.size < 5000000, {
         message: 'La imagen es muy grande',
-      }).optional()
-    : z.any().optional(),
+      })
+    : z.any(),
   address: z.object({
     lat: z.number(),
     lng: z.number(),
