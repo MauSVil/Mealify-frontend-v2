@@ -8,7 +8,7 @@ const EditProductPage = () => {
   const params = useParams();
   const id = params.id;
 
-  const { productQuery } = useProduct(id as string);
+  const { productQuery, updateProductMutation } = useProduct(id as string);
 
   if (!id) return null;
 
@@ -17,7 +17,7 @@ const EditProductPage = () => {
       <ProductForm
         routeTo="/products/list"
         title="Editar Producto"
-        handleSubmit={async () => {}}
+        handleSubmit={async (values) => updateProductMutation.mutate(values)}
         loading={false}
         product={productQuery.data}
         label="Actualizar"

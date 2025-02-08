@@ -32,9 +32,9 @@ const formSchema = z.object({
   description: z.string().min(1, { message: "Descripcion es requerido" }),
   price: z.coerce.number().min(1, { message: "Precio es requerido" }),
   image: isClient
-      ? z.instanceof(File, { message: 'Debe de contener una imagen'}).refine((file) => file.size < 5000000, {
-          message: 'La imagen es muy grande',
-        })
+      ? z.union([z.string().url(), z.instanceof(File, { message: 'Debe de contener una imagen'}).refine((file) => file.size < 5000000, {
+        message: 'La imagen es muy grande',
+      })])
       : z.any(),
 }).and(productSchema.pick({ group: true }));
 
@@ -60,16 +60,20 @@ const ProductForm = (props: ProductProps) => {
   const image = watch('image');
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const formData = new FormData();
-    formData.append('name', values.name);
-    formData.append('description', values.description);
-    formData.append('price', values.price.toString());
-    formData.append('group', values.group);
-    if (values.image) {
-      formData.append('image', values.image);
+    try {
+      const formData = new FormData();
+      formData.append('name', values.name);
+      formData.append('description', values.description);
+      formData.append('price', values.price.toString());
+      formData.append('group', values.group);
+      if (values.image) {
+        formData.append('image', values.image);
+      }
+      await handleSubmit(formData);
+      router.push(routeTo);
+    } catch (error) {
+      console.error(error);
     }
-    await handleSubmit(formData);
-    router.push(routeTo);
   }
 
   useEffect(() => {
