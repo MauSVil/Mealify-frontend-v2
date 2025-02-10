@@ -8,29 +8,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Bar, BarChart, Line, LineChart, XAxis } from "recharts";
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-]
+function capitalizeFirstLetter(val: string) {
+  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
+
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  order: {
+    label: "Ordenes",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
-const chartData1 = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-]
 const chartConfig1 = {
   desktop: {
     label: "Desktop",
@@ -39,7 +27,50 @@ const chartConfig1 = {
 } satisfies ChartConfig
 
 const DashboardPage = () => {
-  const { totalQuery, ordersQuery, refresh } = useDashboard();
+  const {
+    totalQuery,
+    ordersQuery,
+    productsQuery,
+    refresh
+  } = useDashboard();
+
+  const initMonths = {
+    'Enero': 0,
+    'Febrero': 0,
+    'Marzo': 0,
+    'Abril': 0,
+    'Mayo': 0,
+    'Junio': 0,
+  }
+
+  const ordersPerMonth = ordersQuery.data?.reduce((acc: { [key: string]: number }, order) => {
+    const month = capitalizeFirstLetter(order.created_at ? new Date(order.created_at).toLocaleString('default', { month: 'long' }) : 'Unknown');
+    if (!acc[month]) {
+      acc[month] = 0;
+    }
+    acc[month] += 1;
+    return acc;
+  }, initMonths) || {};
+
+  const chartData = Object.keys(ordersPerMonth).map((month) => ({
+    month,
+    order: ordersPerMonth[month],
+  }));
+
+  const products: { [key: string]: number } = ordersQuery.data?.reduce((acc: { [key: string]: number }, order) => {
+    order.order_items!.forEach((item) => {
+      if (!acc[item.id]) {
+        acc[item.id] = 0;
+      }
+      acc[item.id] += item.quantity;
+    });
+    return acc;
+  }, {}) || {};
+
+  const chartData1 = Object.keys(products).map((id) => ({
+    month: id,
+    desktop: products[id],
+  }));
 
   return (
     <>
@@ -90,9 +121,9 @@ const DashboardPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {ordersQuery.isLoading || ordersQuery.isRefetching ? <Loader2 className="animate-spin" /> : (
+            {productsQuery.isLoading || productsQuery.isRefetching ? <Loader2 className="animate-spin" /> : (
               <p className="text-2xl font-bold">
-                {`${ordersQuery.data?.length || 3} producto(s)`}
+                {`${productsQuery.data?.length} producto(s)`}
               </p>
             )}
           </CardContent>
@@ -154,15 +185,14 @@ const DashboardPage = () => {
                   content={<ChartTooltipContent hideLabel />}
                 />
                 <Line
-                  dataKey="desktop"
-                  type="natural"
-                  stroke="var(--color-desktop)"
+                  dataKey="order"
+                  stroke="var(--color-order)"
                   strokeWidth={2}
                   dot={{
-                    fill: "var(--color-desktop)",
+                    fill: "var(--color-order)",
                   }}
                   activeDot={{
-                    r: 6,
+                    r: 4,
                   }}
                 />
               </LineChart>

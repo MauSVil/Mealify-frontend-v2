@@ -2,6 +2,7 @@ import { useBusiness } from "@/contexts/BusinessContext"
 import { useQuery } from "@tanstack/react-query"
 import { useApi } from "../../../../../../lib/api";
 import { Order } from "@/types/Order.type";
+import { Product } from "@/types/Product.type";
 
 export const useDashboard = () => {
 
@@ -24,14 +25,24 @@ export const useDashboard = () => {
     }
   })
 
+  const productsQuery = useQuery<Product[]>({
+    queryKey: ["products", activeBusiness.id],
+    queryFn: async () => {
+      const { data } = await api.get(`/products`);
+      return data;
+    },
+  })
+
   const refresh = () => {
     totalQuery.refetch();
     ordersQuery.refetch();
+    productsQuery.refetch();
   }
 
   return {
     totalQuery,
     ordersQuery,
+    productsQuery,
 
     refresh,
   }
