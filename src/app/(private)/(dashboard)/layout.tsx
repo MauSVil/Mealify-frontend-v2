@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import { useAdmin } from "@/app/(public)/onboarding/(steps)/general/_hooks/useAdmin";
 import { getSocket } from "@/lib/socket";
 import { useApi } from "../../../../lib/api";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const path = usePathname();
@@ -133,6 +135,12 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
                 </Button>
               )
             }
+          </div>
+          <div className="flex items-center gap-2 px-4">
+            <Label>
+              Bloquear negocio
+            </Label>
+            <Switch />
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

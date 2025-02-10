@@ -36,10 +36,10 @@ const formSchema = z.object({
   category: z.enum(['Mexicana', 'Italiana', 'China', 'Japonesa', 'Fast Food']),
   delivery_fee: z.number().min(0, 'El costo de envio es obligatorio'),
   image: isClient
-    ? z.instanceof(File, { message: 'Debe de contener una imagen'}).refine((file) => file.size < 5000000, {
-        message: 'La imagen es muy grande',
-      })
-    : z.any(),
+        ? z.union([z.string().url(), z.instanceof(File, { message: 'Debe de contener una imagen'}).refine((file) => file.size < 5000000, {
+          message: 'La imagen es muy grande',
+        })])
+        : z.any(),
   address: z.object({
     lat: z.number(),
     lng: z.number(),
@@ -149,6 +149,7 @@ const BusinessForm = (props: BusinessProps) => {
           lng: Number(business.longitude),
           address: business.address,
         },
+        image: business.hero_image_min,
       })
     }
   }, [business])
@@ -259,7 +260,7 @@ const BusinessForm = (props: BusinessProps) => {
                                 >
                                   <p className="text-white text-xs font-semibold">X</p>
                                 </div>
-                                <Image src={URL.createObjectURL(image)} layout="fill" objectFit="cover" alt="image" />
+                                <Image src={typeof image === "string" ? image : URL.createObjectURL(image)} layout="fill" objectFit="cover" alt="image" />
                               </div>
                             </div>
                           )}
