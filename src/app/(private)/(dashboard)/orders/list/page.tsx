@@ -11,7 +11,7 @@ const OrdersListPage = () => {
   
   const pendingOrders = (ordersQuery.data?.filter(order => order.status === 'pending' || order.status === 'restaurant_delayed') || []).length;
   const preparingOrders = (ordersQuery.data?.filter(order => order.status === 'preparing') || []).length;
-  const readyForPickupOrders = (ordersQuery.data?.filter(order => order.status === 'ready_for_pickup') || []).length;
+  const readyForPickupOrders = (ordersQuery.data?.filter(order => order.status === 'ready_for_pickup' ||  order.status === 'in_progress') || []).length;
 
   return (
     <Tabs defaultValue="pending" className="w-full">
