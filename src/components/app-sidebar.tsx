@@ -46,10 +46,6 @@ const data = {
           title: "List",
           url: "/products/list",
         },
-        {
-          title: "Add",
-          url: "/products/add",
-        },
       ],
     },
     {

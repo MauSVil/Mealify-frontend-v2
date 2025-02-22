@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash } from "lucide-react";
+import { CirclePlus, Edit, Trash } from "lucide-react";
 import numeral from "numeral";
 import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
 import { useApi } from "../../../../../../lib/api";
@@ -60,6 +60,12 @@ const ProductsList = () => {
             </Button>
           )
         }
+        <Button
+          onClick={() => router.push('/products/add')}
+        >
+          <CirclePlus size={16} />
+          Agregar producto
+        </Button>
       </div>
 
       {Object.keys(groupedProducts).map((group) => (

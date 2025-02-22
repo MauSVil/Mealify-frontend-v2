@@ -39,7 +39,7 @@ const formSchema = z.object({
 }).and(productSchema.pick({ group: true }));
 
 const ProductForm = (props: ProductProps) => {
-  const { routeTo = "/products/list", handleSubmit, title, loading, product, label = "Crear" } = props;
+  const { routeTo = "/products/list", handleSubmit, loading, product, label = "Crear" } = props;
 
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null)  
@@ -96,9 +96,6 @@ const ProductForm = (props: ProductProps) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1">
         <div className="flex gap-4 flex-row">
           <div className="bg-white shadow rounded-lg space-y-4 p-4 flex-1">
-            <h1 className="text-2xl font-semibold">
-              {title}
-            </h1>
             <InputFormField
               controllerProps={{
                 control: form.control,
