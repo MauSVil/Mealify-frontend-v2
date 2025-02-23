@@ -30,7 +30,7 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
   }, []);
   
   const { getAminQuery } = useAdmin();
-  const { businesses, isLoading } = useBusiness();
+  const { businesses, isLoading, lock, setLock } = useBusiness();
   
   useEffect(() => {
     if (getAminQuery.isLoading) return;
@@ -111,7 +111,11 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
 
   return (
     <SidebarProvider>
-      <AppSidebar businesses={businesses} />
+      {
+        !lock && (
+          <AppSidebar businesses={businesses} />
+        )
+      }
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
@@ -121,9 +125,9 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
                 <Button
                   variant={"outline"}
                   className="flex gap-2"
+                  disabled={lock}
                   onClick={async () => {
                     const { data } = await api.get('/stripe/generate-sign-in-link');
-                    console.log({ data })
                     if (data?.link) {
                       window.open(data.link.url, '_blank');
                     }
@@ -138,9 +142,9 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
           </div>
           <div className="flex items-center gap-2 px-4">
             <Label>
-              Bloquear negocio
+              Bloquear vista
             </Label>
-            <Switch />
+            <Switch checked={lock} onCheckedChange={setLock} />
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

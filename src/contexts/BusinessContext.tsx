@@ -9,17 +9,22 @@ export const BusinessContext = createContext<{
   isLoading: boolean,
   activeBusiness: Restaurant,
   setActiveBusiness: (business: Restaurant) => void,
+  lock: boolean,
+  setLock: (lock: boolean) => void,
 }>({
   businesses: [],
   refetchBusinesses: () => {},
   isLoading: false,
   activeBusiness: {} as Restaurant,
   setActiveBusiness: () => {},
+  lock: false,
+  setLock: () => {},
 });
 
 export const BusinessProvider = ({ children }: { children: ReactNode }) => {
   const [activeBusiness, setActiveBusiness] = useState<Restaurant>({} as Restaurant);
   const [businesses, setBusinesses] = useState<Restaurant[]>([]);
+  const [lock, setLock] = useState(false);
   const { businessesQuery } = useBusinesses();
 
   useEffect(() => {
@@ -46,6 +51,8 @@ export const BusinessProvider = ({ children }: { children: ReactNode }) => {
         isLoading: businessesQuery.isLoading || businessesQuery.isFetching,
         setActiveBusiness,
         activeBusiness,
+        lock,
+        setLock,
       }}
     >
       {children}
