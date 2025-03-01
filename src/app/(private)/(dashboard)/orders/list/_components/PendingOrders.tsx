@@ -19,6 +19,7 @@ const PendingOrders = () => {
 
   useSocket('message', () => {
     ordersQuery.refetch();
+    console.log({ message: 'refetching orders' })
   })
 
   const initialOpenValues = useMemo(() => {
