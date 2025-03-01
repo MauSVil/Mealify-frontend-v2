@@ -8,6 +8,7 @@ interface SocketHandler {
 const useSocket = (event: string, handler: SocketHandler): void => {
   useEffect(() => {
     const socket = getSocket();
+    console.log({ event, handler });
     socket.on(event, handler);
 
     return () => {

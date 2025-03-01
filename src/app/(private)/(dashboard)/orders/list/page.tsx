@@ -15,7 +15,8 @@ const OrdersListPage = () => {
   const readyForPickupOrders = (ordersQuery.data?.filter(order => order.status === 'ready_for_pickup' ||  order.status === 'in_progress') || []).length;
 
   useSocket('message', () => {
-    ordersQuery.refetch();
+    console.log({ message: 'Refetch?' });
+    // ordersQuery.refetch();
   })
 
   return (
