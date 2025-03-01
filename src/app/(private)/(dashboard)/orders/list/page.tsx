@@ -5,7 +5,6 @@ import PreparingOrders from "./_components/PreparingOrders";
 import ReadyToDeliver from "./_components/ReadyToDeliver";
 import PendingOrders from "./_components/PendingOrders";
 import { useOrders } from "./_hooks/useOrders";
-import useSocket from "@/hooks/useSocket";
 
 const OrdersListPage = () => {
   const { ordersQuery } = useOrders();
@@ -13,11 +12,6 @@ const OrdersListPage = () => {
   const pendingOrders = (ordersQuery.data?.filter(order => order.status === 'pending' || order.status === 'restaurant_delayed') || []).length;
   const preparingOrders = (ordersQuery.data?.filter(order => order.status === 'preparing') || []).length;
   const readyForPickupOrders = (ordersQuery.data?.filter(order => order.status === 'ready_for_pickup' ||  order.status === 'in_progress') || []).length;
-
-  useSocket('message', () => {
-    ordersQuery.refetch();
-    console.log('Refetching orders');
-  })
 
   return (
     <Tabs defaultValue="pending" className="w-full">

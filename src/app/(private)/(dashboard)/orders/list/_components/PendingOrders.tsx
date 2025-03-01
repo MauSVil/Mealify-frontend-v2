@@ -17,6 +17,10 @@ const PendingOrders = () => {
     ordersQuery.refetch();
   })
 
+  useSocket('message', () => {
+    ordersQuery.refetch();
+  })
+
   const initialOpenValues = useMemo(() => {
     return ordersQuery.data?.map(order => String(order.id!)) || [];
   }, [ordersQuery.data]);
