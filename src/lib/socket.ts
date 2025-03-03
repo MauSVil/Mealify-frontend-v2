@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 import { Socket } from "socket.io-client";
 
 let socket: Socket | undefined;
-let isSocketConnected = false; // Estado de conexión
+let isSocketConnected = false;
 
 export const getSocket = () => {
   if (!socket) {
@@ -22,7 +22,7 @@ export const getSocket = () => {
 
     socket.on("disconnect", (reason) => {
       isSocketConnected = false;
-      console.warn("⚠️ Socket desconectado:", reason);
+      console.warn("👀 Socket desconectado:", reason);
     });
 
     socket.on("connect_error", (err) => {

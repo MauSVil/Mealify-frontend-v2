@@ -6,6 +6,21 @@ const useSocketJoinRooms = () => {
   const { getAminQuery } = useAdmin();
 
   useEffect(() => {
+    if (!getAminQuery.data?.id) return
+    const socket = getSocket().socket;
+
+    console.log("Joining room:", `admin_${getAminQuery.data.id}`);
+    socket.emit("message", { type: "joinRoom", roomId: `admin_${getAminQuery.data.id}` });
+
+    for (const business of getAminQuery.data.restaurants) {
+      console.log("Joining room:", `business_${business.id}`);
+      socket.emit("message", { type: "joinRoom", roomId: `business_${business.id}` });
+    }
+
+  }, [getAminQuery.data]);
+
+
+  useEffect(() => {
     if (!getAminQuery.data?.id) return;
 
     const socket = getSocket().socket;
