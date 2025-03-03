@@ -5,9 +5,10 @@ interface SocketHandler {
   (data: unknown): void;
 }
 
-const useSocket = (event: string, handler: SocketHandler): void => {
+const useSocket = (event: string, handler: SocketHandler) => {
   useEffect(() => {
-    const socket = getSocket();
+    const socket = getSocket().socket;
+
     socket.on(event, handler);
 
     return () => {

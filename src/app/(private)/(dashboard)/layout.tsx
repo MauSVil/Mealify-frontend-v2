@@ -14,10 +14,10 @@ import { Loader2 } from "lucide-react";
 import useSocket from "@/hooks/useSocket";
 import { toast } from "sonner";
 import { useAdmin } from "@/app/(public)/onboarding/(steps)/general/_hooks/useAdmin";
-import { getSocket } from "@/lib/socket";
 import { useApi } from "../../../../lib/api";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import useSocketJoinRooms from "@/hooks/useSocketJoinRooms";
 
 export const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const path = usePathname();
@@ -31,13 +31,6 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
   
   const { getAminQuery } = useAdmin();
   const { businesses, isLoading, lock, setLock } = useBusiness();
-  
-  useEffect(() => {
-    if (getAminQuery.isLoading) return;
-    const socket = getSocket();
-    console.log('joinRoom', `admin_${getAminQuery.data?.id}`);
-    socket.emit("message", { type: "joinRoom", roomId: `admin_${getAminQuery.data?.id}` });
-  }, [getAminQuery.isLoading, getAminQuery.data?.id]);
 
   const content = useMemo(() => {
     if (path === "/business") {
@@ -94,6 +87,8 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
         return <div className="h-2 w-2 bg-gray-500 rounded-full animate-pulse" />
     }
   }, [getAminQuery.data?.stripe_status, getAminQuery.isLoading, getAminQuery.isRefetching])
+
+  useSocketJoinRooms();
 
   useSocket('new-order', () => {
     toast.info('Nueva orden');

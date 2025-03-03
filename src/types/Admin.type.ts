@@ -12,7 +12,10 @@ export const adminSchema = z.object({
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
   onboarding_finished: z.boolean().optional(),
-  stripe_status: z.enum(['error', 'success'])
+  stripe_status: z.enum(['error', 'success']),
+  restaurants: z.array(z.object({
+    id: z.number(),
+  })),
 });
 
 export type Admin = z.infer<typeof adminSchema>;

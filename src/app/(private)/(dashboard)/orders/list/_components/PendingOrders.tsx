@@ -8,28 +8,41 @@ import moment from "moment"
 import Image from "next/image"
 import { useEffect, useMemo, useState } from "react"
 import { useOrders } from "../_hooks/useOrders"
+import { getSocket } from "@/lib/socket"
 
 const PendingOrders = () => {
+  const { isSocketConnected } = getSocket();
   const { ordersQuery, updateOrder } = useOrders();
   const [orderProcessing, setOrderProcessing] = useState<number | undefined>();
 
-  useSocket('new-order', () => {
-    ordersQuery.refetch();
-  })
+  useSocket("new-order", () => ordersQuery.refetch());
+  useSocket("message", () => ordersQuery.refetch());
 
-  useSocket('message', () => {
-    ordersQuery.refetch();
-  })
-
-  const [, setTime] = useState(Date.now());
+  const [backupPolling, setBackupPolling] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(Date.now());
-    }, 30000);
-    
-    return () => clearInterval(interval);
-  }, []);
+    if (isSocketConnected) {
+      if (backupPolling) {
+        clearInterval(backupPolling);
+        setBackupPolling(null);
+      }
+    } else {
+      if (!backupPolling) {
+        const interval = setInterval(() => {
+          ordersQuery.refetch();
+        }, 15000);
+        setBackupPolling(interval);
+
+        console.log("Backup polling started");
+      }
+    }
+
+    return () => {
+      if (backupPolling) {
+        clearInterval(backupPolling);
+      }
+    };
+  }, [isSocketConnected, backupPolling, ordersQuery]);
 
   const initialOpenValues = useMemo(() => {
     return ordersQuery.data?.map(order => String(order.id!)) || [];

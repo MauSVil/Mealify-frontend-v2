@@ -14,7 +14,6 @@ export const useOrders = () => {
       const resp = await api.get('/orders/restaurant/all');
       return resp.data;
     },
-    refetchInterval: 15000,
     refetchOnWindowFocus: true,
   })
 

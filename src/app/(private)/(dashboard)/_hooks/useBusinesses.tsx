@@ -17,6 +17,7 @@ export const useBusinesses = () => {
       return resp.data;
     },
     refetchOnWindowFocus: false,
+    enabled: !!user?.id
   })
 
   return {
