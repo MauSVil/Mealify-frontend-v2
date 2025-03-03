@@ -15,6 +15,7 @@ export const useOrders = () => {
       return resp.data;
     },
     refetchInterval: 15000,
+    refetchOnWindowFocus: true,
   })
 
   const updateOrder = useMutation({
