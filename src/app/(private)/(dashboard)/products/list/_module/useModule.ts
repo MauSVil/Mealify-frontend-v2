@@ -50,7 +50,10 @@ export const useModule = () => {
 
   const handleImportProducts = async () => {
     try {
-      await ImportProductsModal();
+      const resp = await ImportProductsModal();
+      if (!resp) return;
+      const { excelFile, imagesFiles } = resp;
+      console.log({ excelFile, imagesFiles });
     } catch {
       console.log('Cancel import products');
     }
