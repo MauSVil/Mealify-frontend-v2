@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useUser } from "@clerk/nextjs"
 import { Restaurant } from "@/types/Restaurant.type"
+// import Image from "next/image"
 
 const data = {
   navMain: [
@@ -145,6 +146,14 @@ export function AppSidebar({ businesses, ...props }: Props) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
+      {/* <div className="flex p-2">
+        <Image
+          src={"/logo_3.png"}
+          alt=""
+          width={80}
+          height={100}
+        />
+      </div> */}
       <SidebarHeader>
         {headerContent}
       </SidebarHeader>
