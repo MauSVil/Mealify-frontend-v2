@@ -1,11 +1,19 @@
 import { Product } from "@/types/Product.type";
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useApi } from "../../../../../../../../lib/api";
-import { useProducts } from "../../../list/_hooks/useProducts";
+import { useBusiness } from "@/contexts/BusinessContext";
 
 export const useProduct = (id: string) => {
   const api = useApi();
-  const { productsQuery } = useProducts();
+  const { activeBusiness } = useBusiness();  
+
+  const productsQuery = useQuery<Product[]>({
+    queryKey: ["products", activeBusiness.id],
+    queryFn: async () => {
+      const { data } = await api.get(`/products`);
+      return data;
+    },
+  })
 
   const productQuery = useQuery<Product>({
     queryKey: ['product', id],

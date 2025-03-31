@@ -1,48 +1,29 @@
 'use client';
 
 import _ from 'lodash';
-import { useProducts } from "./_hooks/useProducts"
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
-import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { CirclePlus, Edit, Trash } from "lucide-react";
 import numeral from "numeral";
-import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
-import { useApi } from "../../../../../../lib/api";
-import { useRouter } from "next/navigation";
 import { groupOptions } from '@/types/Product.type';
+import { useModule } from './_module/useModule';
+import { useRouter } from 'next/navigation';
 
 const ProductsList = () => {
-  const api = useApi();
   const router = useRouter();
-  const [productsModified, setProductsModified] = useState<Record<string, boolean>>({});
-
-  const [query, setQuery] = useState('');
-  const { productsQuery, modifiedProductsMutation } = useProducts();
-  const products = useMemo(() => productsQuery.data || [], [productsQuery.data]);
+  const { methods, localData, flags } = useModule();
+  const { handleDeleteProduct, setProductsModified, setQuery, modifyProducts, handleImportProducts } = methods;
+  const { productsModified, query, products } = localData;
 
   const productsFiltered = products.filter((product) => product.name.toLowerCase().includes(query.toLowerCase()));
 
   const groupedProducts = _.groupBy(productsFiltered, 'group');
 
-  if (productsQuery.isError) toast.error(productsQuery.error.message);
-
-  const handleDeleteProduct = async (productId: number) => {
-    try {
-      await ConfirmationModal({
-        title: '¿Estás seguro de que deseas eliminar este producto?',
-        cancelText: 'Cancelar',
-        confirmationText: 'Eliminar',
-      })
-      await api.delete(`/products/${productId}`);
-    } catch (err) {
-      console.log('cancel delete product', err, productId);
-    }
-  }
+  if (flags.isError) toast.error('Error al cargar los productos');
 
   return (
     <>
@@ -52,7 +33,7 @@ const ProductsList = () => {
           Object.keys(productsModified).length > 0 && (
             <Button
               onClick={async () => {
-                await modifiedProductsMutation.mutateAsync(productsModified);
+                await modifyProducts(productsModified);
                 setProductsModified({});
               }}
             >
@@ -65,6 +46,11 @@ const ProductsList = () => {
         >
           <CirclePlus size={16} />
           Agregar producto
+        </Button>
+        <Button
+          onClick={handleImportProducts}
+        >
+          Importar productos
         </Button>
       </div>
 
