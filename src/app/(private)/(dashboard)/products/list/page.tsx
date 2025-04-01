@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CirclePlus, Edit, Trash } from "lucide-react";
+import { CirclePlus, Edit, Loader2, Trash } from "lucide-react";
 import numeral from "numeral";
 import { groupOptions } from '@/types/Product.type';
 import { useModule } from './_module/useModule';
@@ -49,7 +49,9 @@ const ProductsList = () => {
         </Button>
         <Button
           onClick={handleImportProducts}
+          disabled={flags.isImporting}
         >
+          {flags.isImporting && <Loader2 className="animate-spin mr-1" size={16} />}
           Importar productos
         </Button>
       </div>

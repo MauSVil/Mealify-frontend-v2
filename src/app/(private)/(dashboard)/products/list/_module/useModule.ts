@@ -6,6 +6,7 @@ import { Product } from "@/types/Product.type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ImportProductsModal } from "../_modals/ImportProducts";
+import { ProductsConfirmationModal } from "../_modals/ProductsConfirmation";
 
 export const useModule = () => {
   const api = useApi();
@@ -35,6 +36,18 @@ export const useModule = () => {
     }
   })
 
+  const importProductsMutation = useMutation({
+    mutationKey: ["products", activeBusiness.id],
+    mutationFn: async (body: FormData) => {
+      const res = await api.post<{ failedProducts: string[] }>('/products/bulk', body, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+      return res.data;
+    },
+  })
+
   const handleDeleteProduct = async (productId: number) => {
     try {
       await ConfirmationModal({
@@ -52,8 +65,16 @@ export const useModule = () => {
     try {
       const resp = await ImportProductsModal();
       if (!resp) return;
-      const { excelFile, imagesFiles } = resp;
-      console.log({ excelFile, imagesFiles });
+      const { excelFile, imagesFiles } = resp as { excelFile: File, imagesFiles: File[] };
+      const formData = new FormData();
+      formData.append('file', excelFile);
+      imagesFiles.forEach((file) => {
+        formData.append('products', file);
+      });
+      const { failedProducts } = await importProductsMutation.mutateAsync(formData);
+      await ProductsConfirmationModal({
+        failedProducts,
+      });
     } catch {
       console.log('Cancel import products');
     }
@@ -68,6 +89,7 @@ export const useModule = () => {
     flags: {
       isLoading: productsQuery.isLoading,
       isError: productsQuery.isError,
+      isImporting: importProductsMutation.isPending,
     },
     methods: {
       setProductsModified,
