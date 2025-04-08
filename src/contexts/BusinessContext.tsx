@@ -20,6 +20,8 @@ export const BusinessContext = createContext<{
   setLock: () => {},
 });
 
+const activeBusinessId = localStorage.getItem('activeBusiness');
+
 export const BusinessProvider = ({ children }: { children: ReactNode }) => {
   const [activeBusiness, setActiveBusiness] = useState<Restaurant>({} as Restaurant);
   const [businesses, setBusinesses] = useState<Restaurant[]>([]);
@@ -29,9 +31,25 @@ export const BusinessProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (businessesQuery.data) {
       setBusinesses(businessesQuery.data);
-      setActiveBusiness(businessesQuery.data[0]);
+    }
+    if (activeBusinessId) {
+      const business = businessesQuery.data?.find(b => b.id === Number(activeBusinessId));
+      if (business) {
+        setActiveBusiness(business);
+      }
+    } else {
+      const firstBusiness = businessesQuery.data?.[0];
+      if (firstBusiness) {
+        setActiveBusiness(firstBusiness);
+      }
     }
   }, [businessesQuery.data, businessesQuery.isFetched]);
+
+  useEffect(() => {
+    if (activeBusiness) {
+      localStorage.setItem('activeBusiness', activeBusiness.id?.toString() || '');
+    }
+  }, [activeBusiness]);
 
   const refetchBusinesses = () => {
     businessesQuery.refetch();
