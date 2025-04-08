@@ -34,7 +34,7 @@ const formSchema = z.object({
   name: z.string().min(2, 'El nombre es obligatorio').max(50, 'El nombre es muy largo'),
   phone: z.string({ message: 'El telefono es obligatorio' }).min(10, 'El telefono es obligatorio').max(10, 'El telefono es muy largo'),
   category: z.enum(['Mexicana', 'Italiana', 'China', 'Japonesa', 'Fast Food']),
-  delivery_fee: z.number().min(0, 'El costo de envio es obligatorio'),
+  delivery_fee: z.coerce.number().min(0, 'El costo de envio es obligatorio'),
   image: isClient
         ? z.union([z.string().url(), z.instanceof(File, { message: 'Debe de contener una imagen'}).refine((file) => file.size < 5000000, {
           message: 'La imagen es muy grande',
